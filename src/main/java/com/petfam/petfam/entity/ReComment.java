@@ -28,7 +28,7 @@ public class ReComment {
   private String content;
 
 
-
+  @Builder
   public ReComment(String content, User user, Comment comment) {
     this.content = content;
     this.user = user;
