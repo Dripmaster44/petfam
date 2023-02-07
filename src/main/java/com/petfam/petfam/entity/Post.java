@@ -1,13 +1,16 @@
 package com.petfam.petfam.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Post {
 
     @Id
@@ -38,6 +41,7 @@ public class Post {
 
     private CategoryEnum category;
 
+    @Builder
     public Post(String title, String content, String image) {
         this.title = title;
         this.content = content;
