@@ -11,7 +11,7 @@ import java.util.List;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JoinColumn
@@ -29,11 +29,11 @@ public class Post {
 
     @JoinColumn
     @OneToMany
-    private List<PostLike> postLike = new ArrayList<>();
+    private List<PostLike> postLikes = new ArrayList<>();
 
     @JoinColumn
     @OneToMany
-    private List<Comment> comment = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
 
     private CategoryEnum category;
