@@ -1,21 +1,14 @@
 package com.petfam.petfam.entity;
 
-<<<<<<< HEAD
-import jakarta.persistence.Column;
-=======
 
->>>>>>> origin/dev
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-<<<<<<< HEAD
-import jakarta.persistence.OneToMany;
-=======
 
->>>>>>> origin/dev
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +29,7 @@ public class CommentLike {
 	@ManyToOne
 	private User user;
 
+	@Builder
 	public CommentLike(Comment comment, User user) {
 		this.comment = comment;
 		this.user = user;
