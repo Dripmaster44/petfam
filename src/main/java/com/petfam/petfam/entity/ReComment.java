@@ -27,7 +27,7 @@ public class ReComment {
   private String content;
 
 
-  @Builder
+
   public ReComment(String content, User user, Comment comment) {
     this.content = content;
     this.user = user;
@@ -36,9 +36,11 @@ public class ReComment {
 
 
   @ManyToOne
+  @JoinColumn
   private User user;
 
   @ManyToOne
+  @JoinColumn
   private Comment comment;
 
   @JoinColumn
