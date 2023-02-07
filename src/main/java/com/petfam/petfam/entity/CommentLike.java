@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ public class CommentLike {
 	@ManyToOne
 	private User user;
 
+	@Builder
 	public CommentLike(Comment comment, User user) {
 		this.comment = comment;
 		this.user = user;
