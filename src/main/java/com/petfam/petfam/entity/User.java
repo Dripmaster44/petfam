@@ -58,14 +58,14 @@ public class User {
    * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
    */
   @Builder
-  public User(String username, String password, String nickname, Integer point,
-      String image, String introduction, UserRoleEnum userRole ){
+  public User(String username, String password, String nickname,
+      String image, UserRoleEnum userRole ){
     this.username = username;
     this.password = password;
     this.nickname = nickname;
-    this.image = image;
-    this.introduction = introduction;
-    this.point = point;
+    this.image = "src/main/java/resources/static/images/m_20220509173224_d9N4ZGtBVR.jpeg";
+    this.introduction = "안녕하세요.";
+    this.point = 0;
     this.userRole = userRole;
   }
 
@@ -73,14 +73,14 @@ public class User {
   /**
    * 연관관계 - Foreign Key 값을 따로 컬럼으로 정의하지 않고 연관 관계로 정의합니다.
    */
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private final List<Post> posts = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private final List<Comment> comments = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private final List<ReComment> reComments = new ArrayList<>();
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private final List<Post> posts = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private final List<Comment> comments = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private final List<ReComment> reComments = new ArrayList<>();
 
 
   /**
