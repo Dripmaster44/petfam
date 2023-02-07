@@ -1,4 +1,4 @@
-package com.petfam.petfam.entity;
+package com.petfam.petfam.entity.enums;
 
 
 public enum CategoryEnum {
