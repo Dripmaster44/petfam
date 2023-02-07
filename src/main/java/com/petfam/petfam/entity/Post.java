@@ -1,5 +1,6 @@
 package com.petfam.petfam.entity;
 
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
