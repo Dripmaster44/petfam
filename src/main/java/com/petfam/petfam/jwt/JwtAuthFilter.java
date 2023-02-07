@@ -1,5 +1,5 @@
 package com.petfam.petfam.jwt;
 
-public class a {
+public class JwtAuthFilter {
 
 }

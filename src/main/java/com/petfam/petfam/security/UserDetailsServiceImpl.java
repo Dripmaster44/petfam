@@ -1,5 +1,7 @@
 package com.petfam.petfam.security;
 
+import com.petfam.petfam.entity.User;
+import com.petfam.petfam.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
