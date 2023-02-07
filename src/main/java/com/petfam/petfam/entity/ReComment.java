@@ -1,5 +1,6 @@
 package com.petfam.petfam.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class ReComment {
   private Comment comment;
 
   @JoinColumn
-  @OneToMany
+  @OneToMany(mappedBy = "recommend",cascade = CascadeType.ALL,orphanRemoval = true)
   private List<ReCommentLike> reCommentLikes = new ArrayList<>();
   
 }
