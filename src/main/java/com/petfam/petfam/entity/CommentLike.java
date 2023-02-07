@@ -1,13 +1,21 @@
 package com.petfam.petfam.entity;
 
+<<<<<<< HEAD
 import jakarta.persistence.Column;
+=======
+
+>>>>>>> origin/dev
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+<<<<<<< HEAD
 import jakarta.persistence.OneToMany;
+=======
+
+>>>>>>> origin/dev
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
