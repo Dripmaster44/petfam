@@ -39,7 +39,7 @@ public class ReCommentServiceImpl implements ReCommentService {
                 reComment.updateReComment(reCommentRequestDto.getContent());
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
         } else reComment.updateReComment(reCommentRequestDto.getContent());
-        return "댓글 수정 완료";
+        return "댓글 수정이 완료되었습니다.";
     }
 
     // 대댓글 삭제

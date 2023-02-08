@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService{
                 comment.updateComment(commentRequestDto.getContent());
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
         } else comment.updateComment(commentRequestDto.getContent());
-        return "댓글 생성 완료";
+        return "댓글 수정이 완료되었습니다.";
     }
 
     // 댓글 삭제
