@@ -46,7 +46,7 @@ public class WebSecurityConfig {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().requestMatchers("/users/signup").permitAll()
+        http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
                 .requestMatchers("/users/signin").permitAll()
                 .requestMatchers("/admin/signup").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
