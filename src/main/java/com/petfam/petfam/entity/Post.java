@@ -1,10 +1,15 @@
 package com.petfam.petfam.entity;
 
+import com.petfam.petfam.dto.AllPostResponseDto;
+import com.petfam.petfam.dto.CreatePostRequestDto;
+import com.petfam.petfam.dto.PostRequestDto;
+import com.petfam.petfam.dto.PostResponseDto;
 import com.petfam.petfam.entity.enums.CategoryEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +47,17 @@ public class Post {
 
     private CategoryEnum category;
 
-    @Builder
-    public Post(String title, String content, String image) {
-        this.title = title;
-        this.content = content;
-        this.image = image;
+
+    public Post(CreatePostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.image = requestDto.getImage();
     }
+
+    public void update(PostRequestDto dto){
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.image = dto.getImage();
+    }
+
 }

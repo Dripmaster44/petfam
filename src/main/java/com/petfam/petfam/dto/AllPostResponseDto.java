@@ -1,0 +1,20 @@
+package com.petfam.petfam.dto;
+
+import com.petfam.petfam.entity.Post;
+
+public class AllPostResponseDto {
+	private Long id;
+	private String writer;
+	private String title;
+	private String image;
+	private Integer likeCnt;
+
+	public AllPostResponseDto(Post post, Integer likeCnt) {
+		this.id = post.getId();
+		this.title = post.getTitle();
+		this.image = post.getImage();
+		this.writer = post.getUser().getNickname();
+		this.likeCnt = likeCnt;
+	}
+
+}
