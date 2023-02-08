@@ -1,7 +1,16 @@
 package com.petfam.petfam.jwt;
 
 import com.petfam.petfam.entity.enums.UserRoleEnum;
+import com.petfam.petfam.security.UserDetailsServiceImpl;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -19,9 +28,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-  private final ClientDetailsServiceImpl clientDetailsService;
-  private final AdminDetailsServiceImpl adminDetailsService;
-
+  private final UserDetailsServiceImpl userDetailsService;
 
 
   //토큰 생성에 필요한 값
@@ -29,37 +36,23 @@ public class JwtUtil {
   public static final String REFRESH_AUTHORIZATION_HEADER = "Refresh_authorization"; //Header KEY 값
   public static final String AUTHORIZATION_KEY = "auth";  // 사용자 권한 값의 KEY.
   public static final String BEARER_PREFIX = "Bearer "; //토큰 식별자.
-  public static final String REFRESH_PREFIX = "Refres "; //토큰 식별자.
-  private static final long ACCESS_TOKEN_TIME = 30 * 1000L; //1 hour // 60min X 60sec X 1000ms
+  public static final String REFRESH_PREFIX = "Refresh "; //토큰 식별자.
+  private static final long ACCESS_TOKEN_TIME = 30 * 60 * 1000L;
   private static final Long REFRESH_TOKEN_TIME = 14 * 24 * 60 * 60 * 1000L; // 14 day
-  @Value("${jwt.secret.key}")
-  private String secretKey;
-  private Key key;
+  @Value("${jwt.secret.key}")       //properties의 값을 읽어온다.
+  private String secretKey;         //비밀키 jwt암호 해독의 필수키
+  private Key key;                   //secretKey를 사용할수있게 변화시킨 key
   private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-  @PostConstruct //객체 생성 시 초기화
+  @PostConstruct //의존성주입이 이루어진후 초기화 하는 매서드 로직이 실행되기전에 수행된다.
   public void init() {
-    byte[] bytes = Base64.getDecoder().decode(secretKey);
-    key = Keys.hmacShaKeyFor(bytes);
+    byte[] bytes = Base64.getDecoder().decode(secretKey);  //secretKey는 64진법으로 이루어져서 이것을 해독해서 byte코드로 만들고
+    key = Keys.hmacShaKeyFor(bytes);                       //Key로 변환시켜 key로 넣어준다
   }
   public static Long getRefreshTokenTime() {
     return REFRESH_TOKEN_TIME;
   }
 
-  public String resolveAccessToken(String bearerToken) {
-    //헤더가 null이 아니고 &&  헤더가 해당 Bearer 식별자로 시작한다면 식별자 제거
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-      return bearerToken.substring(7);
-    }
-    return null;
-  }
-  public String resolveRefreshToken(String bearerToken) {
-    //헤더가 null이 아니고 &&  헤더가 해당 Refres 식별자로 시작한다면 식별자 제거
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(REFRESH_PREFIX)) {
-      return bearerToken.substring(7);
-    }
-    return null;
-  }
 
   // 토큰 생성
   public String createToken(String username, UserRoleEnum role) {
@@ -85,6 +78,22 @@ public class JwtUtil {
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)
             .compact();
+  }
+
+  //클라이언트 요청에서 토큰을 찾아내고 BEARER_PREFIX를 제거하여 key로 해독가능한 상태로 만들어준다.
+  public String resolveToken(HttpServletRequest request) {
+    String bearerToken = request.getHeader(AUTHORIZATION_HEADER);  //HttpServletRequest매서드 .getHeader로 request에서 토큰을 찾는다.
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {  //찾은 토큰이 text를 가지고있고 시작부분이 위에 정한 BEARER_PREFIX 와 같다면
+      return bearerToken.substring(7); //"Bearer " 를 지워주기위해 substring을 사용한다.
+    }
+    return null;
+  }
+  public String resolveRefreshToken(HttpServletRequest request) {
+    String bearerToken = request.getHeader(REFRESH_AUTHORIZATION_HEADER);
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(REFRESH_PREFIX)) {
+      return bearerToken.substring(8);
+    }
+    return null;
   }
 
   // 토큰 검증
@@ -114,48 +123,42 @@ public class JwtUtil {
   }
 
   // 인증 객체 생성
-  public Authentication createAuthentication(String username,String role) {
-    if(role.equals("ADMIN")){
-      UserDetails adminDetails = adminDetailsService.loadUserByUsername(username);
-      return new UsernamePasswordAuthenticationToken(adminDetails, null, adminDetails.getAuthorities());
-    }else{//role==USER
-      UserDetails clientDetails = clientDetailsService.loadUserByUsername(username);
-      return new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
-    }
-
+  public Authentication createAuthentication(String username) {
+    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
   }
 
-  //리프레시토큰으로 재발급시 사용
-  public Authentication getAuthentication(String token) {
-    // Jwt 에서 claims 추출
-    Claims claims = getUserInfoFromToken(token);
-
-    //토큰이 권한을 들고있지않다면
-    if (claims.get(AUTHORIZATION_KEY) == null) {
-      throw new IllegalStateException("잘못된 권한정보입니다");
-    }
-    //토큰이 들고있는 권한이 어드민이라면
-    if(claims.get(AUTHORIZATION_KEY).equals("ADMIN")){
-      UserDetails adminDetails = adminDetailsService.loadUserByUsername(claims.getSubject());
-      //유저정보 + 크리티컬한정보 저장 + 유저의권한
-      return new UsernamePasswordAuthenticationToken(adminDetails, null, adminDetails.getAuthorities());
-    }
-    //토큰이 들고있는 권한이 유저라면
-    else{ //claims.get(AUTHORIZATION_KEY)== user)
-      UserDetails clientDetails = clientDetailsService.loadUserByUsername(claims.getSubject());
-      //유저정보 + 크리티컬한정보 저장 + 유저의권한
-      return new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
-    }
-
-
-  }
-  //남은 시간 계산
-  public long getRemainMilliSeconds(String token) {
-    Claims info = getUserInfoFromToken(token);
-    Date expiration = info.getExpiration();
-    Date now = new Date();
-    return expiration.getTime() - now.getTime();
-  }
+//  //리프레시토큰으로 재발급시 사용
+//  public Authentication getAuthentication(String token) {
+//    // Jwt 에서 claims 추출
+//    Claims claims = getUserInfoFromToken(token);
+//
+//    //토큰이 권한을 들고있지않다면
+//    if (claims.get(AUTHORIZATION_KEY) == null) {
+//      throw new IllegalStateException("잘못된 권한정보입니다");
+//    }
+//    //토큰이 들고있는 권한이 어드민이라면
+//    if(claims.get(AUTHORIZATION_KEY).equals("ADMIN")){
+//      UserDetails adminDetails = adminDetailsService.loadUserByUsername(claims.getSubject());
+//      //유저정보 + 크리티컬한정보 저장 + 유저의권한
+//      return new UsernamePasswordAuthenticationToken(adminDetails, null, adminDetails.getAuthorities());
+//    }
+//    //토큰이 들고있는 권한이 유저라면
+//    else{ //claims.get(AUTHORIZATION_KEY)== user)
+//      UserDetails clientDetails = clientDetailsService.loadUserByUsername(claims.getSubject());
+//      //유저정보 + 크리티컬한정보 저장 + 유저의권한
+//      return new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
+//    }
+//
+//
+//  }
+//  //남은 시간 계산
+//  public long getRemainMilliSeconds(String token) {
+//    Claims info = getUserInfoFromToken(token);
+//    Date expiration = info.getExpiration();
+//    Date now = new Date();
+//    return expiration.getTime() - now.getTime();
+//  }
 
 
 

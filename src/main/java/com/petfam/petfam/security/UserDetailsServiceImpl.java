@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private final UserRepository clientRepository;
+  private final UserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User client = clientRepository.findByUsername(username).orElseThrow(
+    User user = userRepository.findByUsername(username).orElseThrow(
         () -> new NullPointerException("고객이 존재하지 않습니다.")
     );
-    return new UserDetailsImpl(client, client.getUsername());
+    return new UserDetailsImpl(user, user.getUsername());
   }
 }
