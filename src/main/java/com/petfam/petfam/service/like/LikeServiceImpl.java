@@ -1,41 +1,41 @@
 package com.petfam.petfam.service.like;
 
 import com.petfam.petfam.dto.PostLikeResponseDto;
+import com.petfam.petfam.entity.Likes;
 import com.petfam.petfam.entity.Post;
-import com.petfam.petfam.entity.PostLike;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.LikeEnum;
+import com.petfam.petfam.repository.LikeRepository;
 import com.petfam.petfam.repository.PostRepository;
-import com.petfam.petfam.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PostLikeServiceImpl implements PostLikeService {
+public class LikeServiceImpl implements LikeService {
 
   private final PostRepository postRepository;
 
-  private final PostLikeRepository postLikeRepository;
+  private final LikeRepository likeRepository;
 
   @Override
   @Transactional
   public PostLikeResponseDto likePost(Long postId, User user) {
     boolean islike = false;
-
-    PostLike likelog = postLikeRepository.findByUser_IdAndTargetId(user.getId(), postId)
-        .orElse(null);
-
     String msg = "";
 
+    Likes likelog = likeRepository.findByTypeAndUser_IdAndTargetId(LikeEnum.POST, user.getId(),
+        postId).orElse(null);
+
     if (likelog == null) {
-      likelog = new PostLike(user, postId);
+      likelog = new Likes(user, postId, LikeEnum.POST);
       islike = true;
-      postLikeRepository.save(likelog);
+      likeRepository.save(likelog);
       msg = "좋아요를 누르셨습니다.";
     } else {
       islike = false;
-      postLikeRepository.save(likelog);
+      likeRepository.delete(likelog);
       msg = "좋아요를 취소하셨습니다.";
     }
 

@@ -77,12 +77,12 @@ public class User {
    */
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Post> posts = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private final List<Comment> comments = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private final List<ReComment> reComments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<Comment> comments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<ReComment> reComments = new ArrayList<>();
 
   /**
    * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.

@@ -4,8 +4,8 @@ import com.petfam.petfam.dto.PostLikeResponseDto;
 import com.petfam.petfam.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface PostLikeService {
+public interface LikeService {
 
   @Transactional
-  public PostLikeResponseDto likePost(Long postId, User user);
+  PostLikeResponseDto likePost(Long postId, User user);
 }

@@ -37,7 +37,7 @@ public class Post {
   @Column
   private String image;
 
-  private Integer postLikes = 0;
+  private Integer likes = 0;
 
   @JoinColumn
   @OneToMany
@@ -48,17 +48,19 @@ public class Post {
 
   // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder
-  public Post(Long id, String title, String content, String image) {
+  public Post(Long id, String title, String content, String image, User user) {
     this.id = id;
+    this.user = user;
     this.title = title;
     this.content = content;
     this.image = image;
+    this.likes = 0;
   }
 
   public void updateLike(boolean islike) {
-    postLikes += islike ? 1 : -1;
-    if (postLikes < 0) {
-      postLikes = 0;
+    likes += islike ? 1 : -1;
+    if (likes < 0) {
+      likes = 0;
     }
   }
 }
