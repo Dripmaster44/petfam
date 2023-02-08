@@ -1,5 +1,11 @@
 package com.petfam.petfam.repository;
 
-public interface TalkRepository {
+import com.petfam.petfam.entity.Talk;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TalkRepository extends JpaRepository<Talk, Long> {
+
+  Optional<Talk> findByApplyIdAndReceiveId(Long applyId,Long receivedId);
 
 }
