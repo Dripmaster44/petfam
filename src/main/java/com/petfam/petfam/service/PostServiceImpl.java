@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.petfam.petfam.dto.AllPostResponseDto;
-import com.petfam.petfam.dto.CreatePostRequestDto;
-import com.petfam.petfam.dto.PostRequestDto;
+import com.petfam.petfam.dto.PostCreateRequestDto;
+import com.petfam.petfam.dto.PostUpdateRequestDto;
 import com.petfam.petfam.dto.PostResponseDto;
-import com.petfam.petfam.dto.UpdatePostResponseDto;
+import com.petfam.petfam.dto.PostUpdateResponseDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.repository.CommentRepository;
@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostServiceImpl implements PostService{
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
@@ -28,7 +29,7 @@ public class PostServiceImpl implements PostService{
 
 
 	@Override
-	public String createPost(CreatePostRequestDto requestDto) {
+	public String createPost(PostCreateRequestDto requestDto) {
 		Post post = new Post(requestDto);
 		postRepository.save(post);
 		return "게시글 작성이 완료되었습니다.";
@@ -59,10 +60,10 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public UpdatePostResponseDto updatePost(Long postId, PostRequestDto requestDto) {
+	public PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto) {
 		Post post = _findPost(postId);
 		post.update(requestDto);
-		return new UpdatePostResponseDto(post);
+		return new PostUpdateResponseDto(post);
 	}
 
 

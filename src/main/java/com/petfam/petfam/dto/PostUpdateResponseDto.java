@@ -3,13 +3,13 @@ package com.petfam.petfam.dto;
 
 import com.petfam.petfam.entity.Post;
 
-public class UpdatePostResponseDto {
+public class PostUpdateResponseDto {
 
 	private String title;
 	private String content;
 	private String image;
 
-	public UpdatePostResponseDto(Post post){
+	public PostUpdateResponseDto(Post post){
 		this.title = post.getTitle();
 		this.content = post.getContent();
 		this.image = post.getImage();
