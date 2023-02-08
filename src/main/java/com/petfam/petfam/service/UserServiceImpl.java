@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
   } //추후 구현
 
   @Override
-  public String refresh(HttpServletRequest request,HttpServletResponse response) {
+  public String refresh(HttpServletRequest request, HttpServletResponse response) {
     String accessToken = jwtUtil.resolveToken(request);   //엑세스토큰
     String refreshToken = jwtUtil.resolveRefreshToken(request); //리프레시토큰
 
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         User user = _findUser(accessInfo.getSubject());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(),user.getUserRole()));
         return "로그인이 연장되었습니다.";
-    } else {return "리프레시 토큰과 엑세스토큰의 사용자가 일치하지 않습니다.";}
+    } else {return "다시 로그인 해주세요.";}
   }
 
   private void _ck_username(String username) {
