@@ -1,5 +1,5 @@
 package com.petfam.petfam.controller;
 
-public class a {
+public class TalkController {
 
 }
