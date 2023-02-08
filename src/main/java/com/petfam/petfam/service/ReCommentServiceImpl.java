@@ -6,6 +6,7 @@ import com.petfam.petfam.entity.ReComment;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.ReCommentRepository;
+import com.petfam.petfam.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class ReCommentServiceImpl implements ReCommentService {
             if (reComment.getUser().getUsername().equals(username)) {
                 reComment.updateReComment(reCommentRequestDto.getContent());
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
-        }
+        } else reComment.updateReComment(reCommentRequestDto.getContent());
         return "댓글 수정 완료";
     }
 
@@ -50,7 +51,7 @@ public class ReCommentServiceImpl implements ReCommentService {
             if (reComment.getUser().getUsername().equals(username)) {
                 reCommentRepository.deleteById(reCommentId);
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 삭제가 가능합니다.");
-        }
+        } else reCommentRepository.deleteById(reCommentId);
         return "댓글 삭제가 완료되었습니다.";
     }
 

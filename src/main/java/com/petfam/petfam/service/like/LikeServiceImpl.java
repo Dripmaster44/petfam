@@ -9,8 +9,10 @@ import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.ReComment;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.LikeEnum;
+import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.LikeRepository;
 import com.petfam.petfam.repository.PostRepository;
+import com.petfam.petfam.repository.ReCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,10 @@ public class LikeServiceImpl implements LikeService {
   private final PostRepository postRepository;
 
   private final LikeRepository likeRepository;
+
+  private final CommentRepository commentRepository;
+
+  private final ReCommentRepository reCommentRepository;
 
   @Override
   @Transactional
