@@ -46,8 +46,10 @@ public class Post {
 
   private CategoryEnum category;
 
+  // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder
-  public Post(String title, String content, String image) {
+  public Post(Long id, String title, String content, String image) {
+    this.id = id;
     this.title = title;
     this.content = content;
     this.image = image;
