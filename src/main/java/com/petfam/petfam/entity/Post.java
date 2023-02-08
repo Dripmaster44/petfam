@@ -76,4 +76,8 @@ public class Post {
       likes = 0;
     }
   }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
 }
