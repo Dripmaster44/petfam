@@ -53,13 +53,15 @@ public class User {
   private UserRoleEnum userRole;
 
 
-
   /**
    * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
    */
+
+  // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder
-  public User(String username, String password, String nickname,
-      String image, UserRoleEnum userRole ){
+  public User(Long id, String username, String password, String nickname,
+      String image, UserRoleEnum userRole) {
+    this.id = id;
     this.username = username;
     this.password = password;
     this.nickname = nickname;
@@ -73,32 +75,30 @@ public class User {
   /**
    * 연관관계 - Foreign Key 값을 따로 컬럼으로 정의하지 않고 연관 관계로 정의합니다.
    */
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private final List<Post> posts = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private final List<Comment> comments = new ArrayList<>();
-//
-//  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private final List<ReComment> reComments = new ArrayList<>();
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<Post> posts = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<Comment> comments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<ReComment> reComments = new ArrayList<>();
 
   /**
    * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.
    */
 
 
-
   /**
    * 서비스 메소드 - 외부에서 엔티티를 수정할 메소드를 정의합니다. (단일 책임을 가지도록 주의합니다.)
    */
   // admin 검증 함수
-  public boolean isAdmin(){
+  public boolean isAdmin() {
     return this.userRole == UserRoleEnum.ADMIN;
   }
 
   // 닉네임 업데이트
-  public void updateNickname(String nickname){
+  public void updateNickname(String nickname) {
     this.nickname = nickname;
   }
 }
