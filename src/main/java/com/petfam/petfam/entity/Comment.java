@@ -3,6 +3,7 @@ package com.petfam.petfam.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.petfam.petfam.dto.CommentRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,4 +50,15 @@ public class Comment {
 		this.user = user;
 		this.post = post;
 	}
+
+	public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
+		this.content = commentRequestDto.getContent();
+		this.user = user;
+		this.post = post;
+	}
+
+	public void updateComment(String content){
+		this.content = content;
+	}
+
 }
