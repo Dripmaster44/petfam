@@ -7,8 +7,8 @@ public interface CommentService {
     String comment(Long postId, String username, CommentRequestDto commentRequestDto);
 
     // 댓글 수정
-    String updateComment(Long commentId, Long postId, String username, CommentRequestDto commentRequestDto);
+    String updateComment(Long commentId, String username, CommentRequestDto commentRequestDto);
 
     // 댓글 삭제
-    String deleteComment(Long commentId, Long postId, String username, CommentRequestDto commentRequestDto);
+    String deleteComment(Long commentId, String username, CommentRequestDto commentRequestDto);
 }
