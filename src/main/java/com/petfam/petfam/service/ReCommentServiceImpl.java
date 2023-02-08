@@ -38,8 +38,8 @@ public class ReCommentServiceImpl implements ReCommentService {
             if (reComment.getUser().getUsername().equals(username)) {
                 reComment.updateReComment(reCommentRequestDto.getContent());
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
-        }
-        return "댓글 수정 완료";
+        } else reComment.updateReComment(reCommentRequestDto.getContent());
+        return "댓글 수정이 완료되었습니다.";
     }
 
     // 대댓글 삭제
@@ -51,7 +51,7 @@ public class ReCommentServiceImpl implements ReCommentService {
             if (reComment.getUser().getUsername().equals(username)) {
                 reCommentRepository.deleteById(reCommentId);
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 삭제가 가능합니다.");
-        }
+        } else reCommentRepository.deleteById(reCommentId);
         return "댓글 삭제가 완료되었습니다.";
     }
 

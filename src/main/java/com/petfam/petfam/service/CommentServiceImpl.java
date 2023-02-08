@@ -39,8 +39,8 @@ public class CommentServiceImpl implements CommentService{
             if (comment.getUser().getUsername().equals(username)) {
                 comment.updateComment(commentRequestDto.getContent());
             } else throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
-        }
-        return "댓글 생성 완료";
+        } else comment.updateComment(commentRequestDto.getContent());
+        return "댓글 수정이 완료되었습니다.";
     }
 
     // 댓글 삭제
@@ -52,6 +52,8 @@ public class CommentServiceImpl implements CommentService{
             if (comment.getUser().getUsername().equals(username)) {
                 commentRepository.deleteById(commentId);
             } else throw new IllegalArgumentException("본인이 작성한 댓글만 삭제가 가능합니다.");
+        } else {
+            commentRepository.deleteById(commentId);
         }
         return "댓글 삭제가 완료되었습니다.";
     }
@@ -74,6 +76,7 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
         );
+        return comment;
     }
 
 
