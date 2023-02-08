@@ -8,9 +8,9 @@ public interface ReCommentService {
     String reComment(Long commentId, String username, ReCommentRequestDto reCommentRequestDto);
 
     // 대댓글 수정
-    String updateReComment(Long commentId, Long reCommentId, String username, ReCommentRequestDto reCommentRequestDto);
+    String updateReComment(Long reCommentId, String username, ReCommentRequestDto reCommentRequestDto);
 
     // 대댓글 삭제
-    String deleteReComment(Long reCommentId, Long commentId, String username, ReCommentRequestDto reCommentRequestDto);
+    String deleteReComment(Long reCommentId, String username, ReCommentRequestDto reCommentRequestDto);
 
 }
