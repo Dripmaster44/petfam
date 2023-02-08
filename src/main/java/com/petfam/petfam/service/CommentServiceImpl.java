@@ -22,28 +22,17 @@ public class CommentServiceImpl implements CommentService{
     // 댓글 생성
     @Transactional
     public String comment(Long postId, String username, CommentRequestDto commentRequestDto){
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
-        );
+        Post post = _getPost(postId);
+        User user = _getUser(username);
         Comment comment = new Comment(post,user,commentRequestDto);
         return "댓글 생성이 완료되었습니다.";
     }
 
     // 댓글 수정
     @Transactional
-    public String updateComment(Long commentId, Long postId, String username, CommentRequestDto commentRequestDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
-        );
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
-        );
-        postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
+    public String updateComment(Long commentId, String username, CommentRequestDto commentRequestDto) {
+        Comment comment = _getComment(commentId);
+        User user = _getUser(username);
         if (!user.isAdmin()) {
             if (comment.getUser().getUsername().equals(username)) {
                 comment.updateComment(commentRequestDto.getContent());
@@ -54,22 +43,36 @@ public class CommentServiceImpl implements CommentService{
 
     // 댓글 삭제
     @Transactional
-    public String deleteComment(Long commentId, Long postId, String username, CommentRequestDto commentRequestDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
-        );
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
-        );
-        postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
+    public String deleteComment(Long commentId, String username, CommentRequestDto commentRequestDto) {
+        Comment comment = _getComment(commentId);
+        User user = _getUser(username);
         if (!user.isAdmin()) {
             if (comment.getUser().getUsername().equals(username)) {
                 commentRepository.deleteById(commentId);
             } else throw new IllegalArgumentException("본인이 작성한 댓글만 삭제가 가능합니다.");
         }
-        return "삭제 완료";
+        return "댓글 삭제가 완료되었습니다.";
     }
+
+    private Post _getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+        );
+        return post;
+    }
+
+    private User _getUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
+        );
+        return user;
+    }
+
+    private Comment _getComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+        );
+    }
+
 
 }
