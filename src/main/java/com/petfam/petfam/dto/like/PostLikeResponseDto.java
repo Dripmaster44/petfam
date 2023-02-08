@@ -1,4 +1,4 @@
-package com.petfam.petfam.dto.post;
+package com.petfam.petfam.dto.like;
 
 import lombok.Getter;
 

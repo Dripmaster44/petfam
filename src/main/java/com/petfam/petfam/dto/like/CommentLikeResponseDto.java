@@ -1,15 +1,15 @@
-package com.petfam.petfam.dto.recomment;
+package com.petfam.petfam.dto.like;
 
 import lombok.Getter;
 
 @Getter
-public class ReCommentLikeResponseDto {
+public class CommentLikeResponseDto {
 
   private final String msg;
 
   private final int statuscode;
 
-  public ReCommentLikeResponseDto(String msg, int statuscode) {
+  public CommentLikeResponseDto(String msg, int statuscode) {
     this.msg = msg;
     this.statuscode = statuscode;
   }
