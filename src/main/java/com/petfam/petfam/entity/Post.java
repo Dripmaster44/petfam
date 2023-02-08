@@ -1,5 +1,7 @@
 package com.petfam.petfam.entity;
 
+import com.petfam.petfam.dto.PostCreateRequestDto;
+import com.petfam.petfam.dto.PostUpdateRequestDto;
 import com.petfam.petfam.entity.enums.CategoryEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,10 +59,25 @@ public class Post {
     this.likes = 0;
   }
 
+  public Post(PostCreateRequestDto requestDto) {
+    this.title = requestDto.getTitle();
+    this.content = requestDto.getContent();
+    this.image = requestDto.getImage();
+  }
+  public void update(PostUpdateRequestDto dto){
+    this.title = dto.getTitle();
+    this.content = dto.getContent();
+    this.image = dto.getImage();
+  }
+
   public void updateLike(boolean islike) {
     likes += islike ? 1 : -1;
     if (likes < 0) {
       likes = 0;
     }
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
   }
 }
