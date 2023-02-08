@@ -3,8 +3,10 @@ package com.petfam.petfam.service.like;
 import com.petfam.petfam.dto.CommentLikeResponseDto;
 import com.petfam.petfam.dto.PostLikeResponseDto;
 import com.petfam.petfam.dto.ReCommentLikeResponseDto;
+import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Likes;
 import com.petfam.petfam.entity.Post;
+import com.petfam.petfam.entity.ReComment;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.LikeEnum;
 import com.petfam.petfam.repository.LikeRepository;
@@ -55,11 +57,11 @@ public class LikeServiceImpl implements LikeService {
     boolean islike = false;
     String msg = "";
 
-    Likes likelog = likeRepository.findByTypeAndUser_IdAndTargetId(LikeEnum.POST, user.getId(),
+    Likes likelog = likeRepository.findByTypeAndUser_IdAndTargetId(LikeEnum.COMMENT, user.getId(),
         commentId).orElse(null);
 
     if (likelog == null) {
-      likelog = new Likes(user, commentId, LikeEnum.POST);
+      likelog = new Likes(user, commentId, LikeEnum.COMMENT);
       islike = true;
       likeRepository.save(likelog);
       msg = "좋아요를 누르셨습니다.";
@@ -69,10 +71,10 @@ public class LikeServiceImpl implements LikeService {
       msg = "좋아요를 취소하셨습니다.";
     }
 
-    Post post = postRepository.findById(commentId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+    Comment comment = commentRepository.findById(commentId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
-    post.updateLike(islike);
+    comment.updateLike(islike);
 
     return new CommentLikeResponseDto(msg, 200);
   }
@@ -83,11 +85,11 @@ public class LikeServiceImpl implements LikeService {
     boolean islike = false;
     String msg = "";
 
-    Likes likelog = likeRepository.findByTypeAndUser_IdAndTargetId(LikeEnum.POST, user.getId(),
+    Likes likelog = likeRepository.findByTypeAndUser_IdAndTargetId(LikeEnum.RECOMMENT, user.getId(),
         reCommentId).orElse(null);
 
     if (likelog == null) {
-      likelog = new Likes(user, reCommentId, LikeEnum.POST);
+      likelog = new Likes(user, reCommentId, LikeEnum.RECOMMENT);
       islike = true;
       likeRepository.save(likelog);
       msg = "좋아요를 누르셨습니다.";
@@ -97,10 +99,10 @@ public class LikeServiceImpl implements LikeService {
       msg = "좋아요를 취소하셨습니다.";
     }
 
-    Post post = postRepository.findById(reCommentId)
+    ReComment reComment = reCommentRepository.findById(reCommentId)
         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
-    post.updateLike(islike);
+    reComment.updateLike(islike);
 
     return new ReCommentLikeResponseDto(msg, 200);
   }
