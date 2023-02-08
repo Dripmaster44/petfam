@@ -59,6 +59,7 @@ public class User {
 
   // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder
+
   public User(String username, String password, String nickname,
       String image, UserRoleEnum userRole) {
     this.username = username;

@@ -7,7 +7,6 @@ import com.petfam.petfam.entity.User;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.ReCommentRepository;
 import com.petfam.petfam.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
