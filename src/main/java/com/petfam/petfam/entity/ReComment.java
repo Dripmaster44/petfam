@@ -37,16 +37,17 @@ public class ReComment {
   }
 
 
-  @ManyToOne
   @JoinColumn
+  @ManyToOne
   private User user;
 
-  @ManyToOne
   @JoinColumn
+  @ManyToOne
   private Comment comment;
 
+
   @JoinColumn
-  @OneToMany(mappedBy = "recommend",cascade = CascadeType.ALL,orphanRemoval = true)
+  @OneToMany(mappedBy = "ReComment",cascade = CascadeType.ALL,orphanRemoval = true)
   private List<ReCommentLike> reCommentLikes = new ArrayList<>();
 
   @Builder
