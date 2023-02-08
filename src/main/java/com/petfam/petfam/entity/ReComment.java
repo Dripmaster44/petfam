@@ -1,5 +1,6 @@
 package com.petfam.petfam.entity;
 
+import com.petfam.petfam.dto.ReCommentRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,5 +48,15 @@ public class ReComment {
   @JoinColumn
   @OneToMany(mappedBy = "recommend",cascade = CascadeType.ALL,orphanRemoval = true)
   private List<ReCommentLike> reCommentLikes = new ArrayList<>();
-  
+
+  @Builder
+  public ReComment(Comment comment, User user, ReCommentRequestDto reCommentRequestDto) {
+      this.comment = comment;
+      this.user = user;
+      this.content = reCommentRequestDto.getContent();
+  }
+
+  public void updateReComment(String content) {
+    this.content = content;
+  }
 }
