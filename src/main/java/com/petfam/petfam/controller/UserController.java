@@ -44,7 +44,7 @@ public class UserController {
 	}
 
 	@PostMapping("/signout")
-	public ResponseEntity<String> signout(@RequestBody HttpServletRequest request){
+	public ResponseEntity<String> signout(HttpServletRequest request){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request));
 	}
 
@@ -64,7 +64,7 @@ public class UserController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<String> refresh(@RequestBody HttpServletRequest request, HttpServletResponse response){
+	public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request,response));
 	}
 
