@@ -4,7 +4,6 @@ import com.petfam.petfam.dto.post.AllPostResponseDto;
 import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
-import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
 import java.util.List;
@@ -29,9 +28,9 @@ public class PostController {
 
   // 게시글 작성
   @PostMapping("")
-  public void createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,
+  public String createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    postService.createPost(postCreateRequestDto, userDetails.getUser());
+    return postService.createPost(postCreateRequestDto, userDetails.getUser());
   }
 
   // 게시글 전체 목록 조회
@@ -47,16 +46,17 @@ public class PostController {
   }
 
   @PatchMapping("/{id}")
-  public PostUpdateResponseDto updatePost(@PathVariable Long id,
+  public String updatePost(@PathVariable Long id,
       @RequestBody PostUpdateRequestDto postUpdateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.updatePost(id, postUpdateRequestDto, userDetails.getUser());
+    postService.updatePost(id, postUpdateRequestDto, userDetails.getUser());
+    return "게시글 수정이 완료되었습니다.";
   }
 
   @DeleteMapping("/{id}")
-  public void deletePost(@PathVariable Long id,
+  public String deletePost(@PathVariable Long id,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    postService.deletePost(id, userDetails.getUser());
+    return postService.deletePost(id, userDetails.getUser());
   }
 
 }
