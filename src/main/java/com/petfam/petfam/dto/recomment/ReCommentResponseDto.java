@@ -1,7 +1,9 @@
 package com.petfam.petfam.dto.recomment;
 
 import com.petfam.petfam.entity.ReComment;
+import lombok.Getter;
 
+@Getter
 public class ReCommentResponseDto {
 
   private String writer;

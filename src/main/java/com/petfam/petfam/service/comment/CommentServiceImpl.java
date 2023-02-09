@@ -27,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
     Post post = _getPost(postId);
     user = _getUser(user.getUsername());
     Comment comment = new Comment(post, user, commentRequestDto);
+    commentRepository.save(comment);
     return "댓글 생성이 완료되었습니다.";
   }
 
@@ -40,6 +41,7 @@ public class CommentServiceImpl implements CommentService {
       if (!user.isAdmin()) {
           if (comment.getUser().getUsername().equals(user.getUsername())) {
               comment.updateComment(commentRequestDto.getContent());
+              commentRepository.save(comment);
           } else {
               throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
           }
