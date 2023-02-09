@@ -45,7 +45,7 @@ public class TalkServiceImpl implements TalkService {
       throw new IllegalArgumentException("해당 톡방에 접근권한이 없습니다.");
     }
 
-    List<Message> messages = messageRepository.findAllByTalk(talkId);
+    List<Message> messages = messageRepository.findAllByTalkId(talkId);
     List<MessageResponseDto> messageResponseDtos = new ArrayList<>();
     for (Message message : messages) {
       messageResponseDtos.add(new MessageResponseDto(message));
