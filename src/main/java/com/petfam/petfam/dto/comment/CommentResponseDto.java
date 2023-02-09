@@ -12,11 +12,14 @@ public class CommentResponseDto {
 
   private String writer;
   private String content;
+
+  private Integer likes;
   private List<ReCommentResponseDto> reComments = new ArrayList<>();
 
   public CommentResponseDto(Comment comment) {
     this.writer = comment.getUser().getNickname();
     this.content = comment.getContent();
+    this.likes = comment.getLikes();
 
     List<ReComment> recomments = comment.getReComment();
     for (ReComment reComment : recomments) {
