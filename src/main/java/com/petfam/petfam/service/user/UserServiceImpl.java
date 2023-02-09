@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public String usersignup(UserSignupRequestDto usersignupRequestDto) {
+  public String userSignup(UserSignupRequestDto usersignupRequestDto) {
 
     String password = passwordEncoder.encode(usersignupRequestDto.getPassword());
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public String adminsignup(AdminSignupRequestDto adminsignupRequestDto) {
+  public String adminSignup(AdminSignupRequestDto adminsignupRequestDto) {
     String password = passwordEncoder.encode(adminsignupRequestDto.getPassword());
 
     _ck_username(adminsignupRequestDto.getUsername());
