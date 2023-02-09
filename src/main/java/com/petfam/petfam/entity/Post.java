@@ -65,7 +65,7 @@ public class Post {
     this.image = requestDto.getImage();
   }
 
-  public void update(PostUpdateRequestDto dto) {
+  public void updatePost(PostUpdateRequestDto dto) {
     this.title = dto.getTitle();
     this.content = dto.getContent();
     this.image = dto.getImage();
