@@ -1,11 +1,12 @@
 package com.petfam.petfam.service.user;
 
 
-import com.petfam.petfam.dto.AdminSignupRequestDto;
-import com.petfam.petfam.dto.ProfileResponseDto;
-import com.petfam.petfam.dto.ProfileUpdateDto;
-import com.petfam.petfam.dto.SigninRequestDto;
-import com.petfam.petfam.dto.UserSignupRequestDto;
+
+import com.petfam.petfam.dto.user.AdminSignupRequestDto;
+import com.petfam.petfam.dto.user.ProfileResponseDto;
+import com.petfam.petfam.dto.user.ProfileUpdateDto;
+import com.petfam.petfam.dto.user.SigninRequestDto;
+import com.petfam.petfam.dto.user.UserSignupRequestDto;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.jwt.JwtUtil;
