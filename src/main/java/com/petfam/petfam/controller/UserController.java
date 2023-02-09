@@ -53,7 +53,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(profileUpdateDto,userDetails.getUser()));
 	}
 
-	@GetMapping("/profiles/{userId}")
+	@GetMapping("/profiles")
 	public ResponseEntity<ProfileResponseDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userDetails.getUser().getId()));
 	}

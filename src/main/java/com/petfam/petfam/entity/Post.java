@@ -41,7 +41,7 @@ public class Post extends TimeStamped {
 
   private Integer likes = 0;
 
-  @JoinColumn
+
   @OneToMany(mappedBy = "post")
   private List<Comment> comments = new ArrayList<>();
 

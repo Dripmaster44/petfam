@@ -40,7 +40,6 @@ public class Comment {
   @Column
   private Integer likes;
 
-  @JoinColumn
   @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ReComment> reComment = new ArrayList<>();
 
