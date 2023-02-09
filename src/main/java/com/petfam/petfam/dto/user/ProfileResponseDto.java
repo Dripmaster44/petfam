@@ -1,7 +1,9 @@
 package com.petfam.petfam.dto.user;
 
 import com.petfam.petfam.entity.User;
+import lombok.Getter;
 
+@Getter
 public class ProfileResponseDto {
 
   private String nickname;

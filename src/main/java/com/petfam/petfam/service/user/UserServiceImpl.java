@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public String updateProfile(ProfileUpdateDto profileUpdateDto,User user) {
     user.updateProfile(profileUpdateDto);
+    userRepository.save(user);
     return "프로필 수정 완료";
   }
 
