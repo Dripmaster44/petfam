@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
     }
   }
   private void _ck_nickname(String nickname) {
-    if(userRepository.findByUsername(nickname).isPresent()) {
+    if(userRepository.findByNickname(nickname).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
     }
   }

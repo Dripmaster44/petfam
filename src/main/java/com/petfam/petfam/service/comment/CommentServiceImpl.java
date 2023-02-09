@@ -36,30 +36,29 @@ public class CommentServiceImpl implements CommentService {
       CommentRequestDto commentRequestDto) {
     Comment comment = _getComment(commentId);
     User user = _getUser(username);
-      if (!user.isAdmin()) {
-          if (comment.getUser().getUsername().equals(username)) {
-              comment.updateComment(commentRequestDto.getContent());
-          } else {
-              throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
-          }
+    if (!user.isAdmin()) {
+      if (comment.getUser().getUsername().equals(username)) {
+        comment.updateComment(commentRequestDto.getContent());
       } else {
-          comment.updateComment(commentRequestDto.getContent());
+        throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
       }
+    } else {
+      comment.updateComment(commentRequestDto.getContent());
+    }
     return "댓글 수정이 완료되었습니다.";
   }
 
   // 댓글 삭제
   @Transactional
-  public String deleteComment(Long commentId, String username,
-      CommentRequestDto commentRequestDto) {
+  public String deleteComment(Long commentId, String username) {
     Comment comment = _getComment(commentId);
     User user = _getUser(username);
     if (!user.isAdmin()) {
-        if (comment.getUser().getUsername().equals(username)) {
-            commentRepository.deleteById(commentId);
-        } else {
-            throw new IllegalArgumentException("본인이 작성한 댓글만 삭제가 가능합니다.");
-        }
+      if (comment.getUser().getUsername().equals(username)) {
+        commentRepository.deleteById(commentId);
+      } else {
+        throw new IllegalArgumentException("본인이 작성한 댓글만 삭제가 가능합니다.");
+      }
     } else {
       commentRepository.deleteById(commentId);
     }

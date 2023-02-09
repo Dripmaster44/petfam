@@ -4,6 +4,7 @@ import com.petfam.petfam.dto.message.MessageRequestDto;
 import com.petfam.petfam.dto.message.MessageResponseDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.message.TalkService;
+import com.petfam.petfam.service.message.TalkServiceImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/talk")
 public class TalkController {
 
-  private final TalkService talkService;
+  private final TalkServiceImpl talkService;
 
   //메시지 전송
   @PostMapping("/{receiveId}")
