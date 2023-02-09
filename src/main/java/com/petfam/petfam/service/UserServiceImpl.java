@@ -2,6 +2,8 @@ package com.petfam.petfam.service;
 
 
 import com.petfam.petfam.dto.AdminSignupRequestDto;
+import com.petfam.petfam.dto.ProfileResponseDto;
+import com.petfam.petfam.dto.ProfileUpdateDto;
 import com.petfam.petfam.dto.SigninRequestDto;
 import com.petfam.petfam.dto.UserSignupRequestDto;
 import com.petfam.petfam.entity.User;
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
   private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
   @Override
+  @Transactional
   public String usersignup(UserSignupRequestDto usersignupRequestDto) {
 
     String password = passwordEncoder.encode(usersignupRequestDto.getPassword());
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public String adminsignup(AdminSignupRequestDto adminsignupRequestDto) {
     String password = passwordEncoder.encode(adminsignupRequestDto.getPassword());
 
@@ -60,6 +63,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public String signin(SigninRequestDto signinRequestDto, HttpServletResponse response) {
 
 
@@ -75,11 +79,27 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public String signout(HttpServletRequest request) {
     return null;
   } //추후 구현
 
   @Override
+  @Transactional
+  public String updateProfile(ProfileUpdateDto profileUpdateDto,User user) {
+    user.updateProfile(profileUpdateDto);
+    return "프로필 수정 완료";
+  }
+
+  @Override
+  @Transactional
+  public ProfileResponseDto getProfile(Long userId) {
+    User user = _findUser(userId);
+    return new ProfileResponseDto(user);
+  }
+
+  @Override
+  @Transactional
   public String refresh(HttpServletRequest request, HttpServletResponse response) {
     String accessToken = jwtUtil.resolveToken(request);   //엑세스토큰
     String refreshToken = jwtUtil.resolveRefreshToken(request); //리프레시토큰
@@ -108,6 +128,12 @@ public class UserServiceImpl implements UserService {
   }
   private User _findUser(String username) {
     User user = userRepository.findByUsername(username).orElseThrow(
+        () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
+    );
+    return user;
+  }
+  private User _findUser(Long userId) {
+    User user = userRepository.findById(userId).orElseThrow(
         () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
     );
     return user;

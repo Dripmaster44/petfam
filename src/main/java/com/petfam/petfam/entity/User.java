@@ -1,5 +1,6 @@
 package com.petfam.petfam.entity;
 
+import com.petfam.petfam.dto.ProfileUpdateDto;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Profile;
 
 // lombok
 @Getter
@@ -100,5 +102,12 @@ public class User {
   // 닉네임 업데이트
   public void updateNickname(String nickname) {
     this.nickname = nickname;
+  }
+
+  //프로필 업데이트
+  public void updateProfile(ProfileUpdateDto profileUpdateDto) {
+    this.nickname = profileUpdateDto.getNickname();
+    this.introduction = profileUpdateDto.getIntroduction();
+    this.image = profileUpdateDto.getImage();
   }
 }
