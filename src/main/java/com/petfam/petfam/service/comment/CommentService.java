@@ -11,5 +11,5 @@ public interface CommentService {
   String updateComment(Long commentId, String username, CommentRequestDto commentRequestDto);
 
   // 댓글 삭제
-  String deleteComment(Long commentId, String username, CommentRequestDto commentRequestDto);
+  String deleteComment(Long commentId, String username);
 }
