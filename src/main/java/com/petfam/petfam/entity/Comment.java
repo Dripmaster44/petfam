@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,25 +42,19 @@ public class Comment {
   @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ReComment> reComment = new ArrayList<>();
 
-  @Builder
-  public Comment(String content, User user, Post post) {
-    this.content = content;
-    this.user = user;
-    this.post = post;
-    this.likes = 0;
-  }
 
   public void updateLike(boolean islike) {
     likes += islike ? 1 : -1;
-		if (likes < 0) {
-			likes = 0;
-		}
+    if (likes < 0) {
+      likes = 0;
+    }
   }
 
   public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
     this.user = user;
     this.post = post;
+    this.likes = 0;
   }
 
   public void updateComment(String content) {
