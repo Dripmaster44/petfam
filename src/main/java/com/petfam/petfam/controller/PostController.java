@@ -31,7 +31,7 @@ public class PostController {
   @PostMapping("")
   public void createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    postService.createPost(postCreateRequestDto);
+    postService.createPost(postCreateRequestDto, userDetails.getUser());
   }
 
   // 게시글 전체 목록 조회
@@ -50,13 +50,13 @@ public class PostController {
   public PostUpdateResponseDto updatePost(@PathVariable Long id,
       @RequestBody PostUpdateRequestDto postUpdateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.updatePost(id, postUpdateRequestDto);
+    return postService.updatePost(id, postUpdateRequestDto, userDetails.getUser());
   }
 
   @DeleteMapping("/{id}")
   public void deletePost(@PathVariable Long id,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    postService.deletePost(id);
+    postService.deletePost(id, userDetails.getUser());
   }
 
 }
