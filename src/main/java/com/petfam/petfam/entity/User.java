@@ -105,6 +105,8 @@ public class User {
 
   // 프로필 업데이트
   public void updateProfile(ProfileUpdateDto profileUpdateDto) {
-
+    this.nickname = profileUpdateDto.getNickname();
+    this.introduction = profileUpdateDto.getIntroduction();
+    this.image = profileUpdateDto.getImage();
   }
 }
