@@ -21,24 +21,24 @@ public class ReCommentController {
   private final ReCommentServiceImpl reCommentService;
 
   // 대댓글 생성
-  @PostMapping("")
-  public void reComment(Long Id, ReCommentRequestDto reCommentRequestDto,
+  @PostMapping("commentId")
+  public void reComment(@PathVariable Long commentId, ReCommentRequestDto reCommentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    reCommentService.reComment(Id, userDetails.getUsername(), reCommentRequestDto);
+    reCommentService.reComment(commentId, userDetails.getUser(), reCommentRequestDto);
   }
 
   // 대댓글 수정
-  @PatchMapping("/{Id}")
-  public void updateReComment(@PathVariable Long Id, ReCommentRequestDto reCommentRequestDto,
+  @PatchMapping("/{recommentId}")
+  public void updateReComment(@PathVariable Long recommentId, ReCommentRequestDto reCommentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    reCommentService.updateReComment(Id, userDetails.getUsername(), reCommentRequestDto);
+    reCommentService.updateReComment(recommentId, userDetails.getUser(), reCommentRequestDto);
   }
 
   // 대댓글 삭제
-  @DeleteMapping("/{Id}")
-  public void deleteReComment(@PathVariable Long Id, ReCommentRequestDto reCommentRequestDto,
+  @DeleteMapping("/{recommentId}")
+  public void deleteReComment(@PathVariable Long recommentId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    reCommentService.deleteReComment(Id, userDetails.getUsername(), reCommentRequestDto);
+    reCommentService.deleteReComment(recommentId, userDetails.getUser());
   }
 
 }

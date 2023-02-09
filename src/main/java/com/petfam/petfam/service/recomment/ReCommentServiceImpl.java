@@ -23,9 +23,9 @@ public class ReCommentServiceImpl implements ReCommentService {
 
   // 대댓글 생성
   @Transactional
-  public String reComment(Long commentId, String username,
+  public String reComment(Long commentId, User user,
       ReCommentRequestDto reCommentRequestDto) {
-    User user = _getUser(username);
+    user = _getUser(user.getUsername());
     Comment comment = _getComment(commentId);
     ReComment reComment = new ReComment(comment, user, reCommentRequestDto);
     return "댓글 생성이 완료되었습니다.";
@@ -33,12 +33,12 @@ public class ReCommentServiceImpl implements ReCommentService {
 
   // 대댓글 수정
   @Transactional
-  public String updateReComment(Long reCommentId, String username,
+  public String updateReComment(Long reCommentId, User user,
       ReCommentRequestDto reCommentRequestDto) {
     ReComment reComment = _getReComment(reCommentId);
-    User user = _getUser(username);
+    user = _getUser(user.getUsername());
       if (!user.isAdmin()) {
-          if (reComment.getUser().getUsername().equals(username)) {
+          if (reComment.getUser().getUsername().equals(user.getUsername())) {
               reComment.updateReComment(reCommentRequestDto.getContent());
           } else {
               throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
@@ -51,12 +51,11 @@ public class ReCommentServiceImpl implements ReCommentService {
 
   // 대댓글 삭제
   @Transactional
-  public String deleteReComment(Long reCommentId, String username,
-      ReCommentRequestDto reCommentRequestDto) {
+  public String deleteReComment(Long reCommentId, User user) {
     ReComment reComment = _getReComment(reCommentId);
-    User user = _getUser(username);
+    user = _getUser(user.getUsername());
       if (!user.isAdmin()) {
-          if (reComment.getUser().getUsername().equals(username)) {
+          if (reComment.getUser().getUsername().equals(user.getUsername())) {
               reCommentRepository.deleteById(reCommentId);
           } else {
               throw new IllegalArgumentException("자신이 작성한 댓글만 삭제가 가능합니다.");
