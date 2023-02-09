@@ -1,6 +1,6 @@
 package com.petfam.petfam.entity;
 
-import com.petfam.petfam.dto.MessageRequestDto;
+import com.petfam.petfam.dto.message.MessageRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Message {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;

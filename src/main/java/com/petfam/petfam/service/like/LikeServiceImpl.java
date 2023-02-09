@@ -1,8 +1,8 @@
 package com.petfam.petfam.service.like;
 
-import com.petfam.petfam.dto.CommentLikeResponseDto;
-import com.petfam.petfam.dto.PostLikeResponseDto;
-import com.petfam.petfam.dto.ReCommentLikeResponseDto;
+import com.petfam.petfam.dto.like.CommentLikeResponseDto;
+import com.petfam.petfam.dto.like.PostLikeResponseDto;
+import com.petfam.petfam.dto.like.ReCommentLikeResponseDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Likes;
 import com.petfam.petfam.entity.Post;
