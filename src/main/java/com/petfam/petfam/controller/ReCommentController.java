@@ -3,6 +3,7 @@ package com.petfam.petfam.controller;
 import com.petfam.petfam.dto.recomment.ReCommentRequestDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.recomment.ReCommentService;
+import com.petfam.petfam.service.recomment.ReCommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/recomments")
 public class ReCommentController {
 
-  private final ReCommentService reCommentService;
+  private final ReCommentServiceImpl reCommentService;
 
   // 대댓글 생성
   @PostMapping("")

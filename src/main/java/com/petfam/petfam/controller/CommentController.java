@@ -3,6 +3,7 @@ package com.petfam.petfam.controller;
 import com.petfam.petfam.dto.comment.CommentRequestDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentService;
+import com.petfam.petfam.service.comment.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,28 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/comments")
 public class CommentController {
 
-  private final CommentService commentService;
+  private final CommentServiceImpl commentService;
 
 
   // 댓글 생성
-  @PostMapping("")
-  public void Comment(Long Id, CommentRequestDto commentRequestDto,
+  @PostMapping("/{postId}")
+  public void Comment(Long postId, CommentRequestDto commentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    commentService.comment(Id, userDetails.getUsername(), commentRequestDto);
+    commentService.comment(postId, userDetails.getUsername(), commentRequestDto);
   }
 
   // 댓글 수정
-  @PatchMapping("/{Id}")
-  public void updateComment(@PathVariable Long Id, CommentRequestDto commentRequestDto,
+  @PatchMapping("/{commentId}")
+  public void updateComment(@PathVariable Long commentId, CommentRequestDto commentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    commentService.updateComment(Id, userDetails.getUsername(), commentRequestDto);
+    commentService.updateComment(commentId, userDetails.getUsername(), commentRequestDto);
   }
 
   // 댓글 삭제
-  @DeleteMapping("/{Id}")
-  public void deleteComment(@PathVariable Long Id, CommentRequestDto commentRequestDto,
+  @DeleteMapping("/{commentId}")
+  public void deleteComment(@PathVariable Long commentId, CommentRequestDto commentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    commentService.deleteComment(Id, userDetails.getUsername(), commentRequestDto);
+    commentService.deleteComment(commentId, userDetails.getUsername(), commentRequestDto);
   }
 
 }

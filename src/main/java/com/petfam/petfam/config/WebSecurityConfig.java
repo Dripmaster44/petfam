@@ -47,8 +47,11 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
                 .requestMatchers("/users/signin").permitAll()
-                .requestMatchers("/admin/signup").permitAll()
+                .requestMatchers("/users/admin/signup").permitAll()
+                .requestMatchers("/users/refresh").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+                .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http.formLogin().disable();
