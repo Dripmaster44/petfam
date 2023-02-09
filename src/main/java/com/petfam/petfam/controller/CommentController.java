@@ -2,11 +2,11 @@ package com.petfam.petfam.controller;
 
 import com.petfam.petfam.dto.comment.CommentRequestDto;
 import com.petfam.petfam.security.UserDetailsImpl;
-import com.petfam.petfam.service.comment.CommentService;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -35,5 +35,4 @@ public class CommentController {
   public void deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     commentService.deleteComment(commentId, userDetails.getUser());
   }
-
 }

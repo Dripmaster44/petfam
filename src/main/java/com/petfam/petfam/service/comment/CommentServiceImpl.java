@@ -35,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
   public String updateComment(Long commentId, User user,
       CommentRequestDto commentRequestDto) {
     Comment comment = _getComment(commentId);
+
     user = _getUser(user.getUsername());
       if (!user.isAdmin()) {
           if (comment.getUser().getUsername().equals(user.getUsername())) {
@@ -42,14 +43,15 @@ public class CommentServiceImpl implements CommentService {
           } else {
               throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
           }
-      } else {
-          comment.updateComment(commentRequestDto.getContent());
-      }
+    } else {
+      comment.updateComment(commentRequestDto.getContent());
+    }
     return "댓글 수정이 완료되었습니다.";
   }
 
   // 댓글 삭제
   @Transactional
+
   public String deleteComment(Long commentId, User user) {
     Comment comment = _getComment(commentId);
     user = _getUser(user.getUsername());
@@ -85,6 +87,4 @@ public class CommentServiceImpl implements CommentService {
     );
     return comment;
   }
-
-
 }

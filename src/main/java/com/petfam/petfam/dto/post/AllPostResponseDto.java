@@ -1,7 +1,9 @@
 package com.petfam.petfam.dto.post;
 
 import com.petfam.petfam.entity.Post;
+import lombok.Getter;
 
+@Getter
 public class AllPostResponseDto {
 
   private Long id;
