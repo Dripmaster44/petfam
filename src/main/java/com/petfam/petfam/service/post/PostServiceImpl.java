@@ -7,6 +7,7 @@ import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
+import com.petfam.petfam.entity.User;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.repository.ReCommentRepository;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
@@ -27,8 +27,9 @@ public class PostServiceImpl implements PostService {
 
 
   @Override
-  public String createPost(PostCreateRequestDto requestDto) {
-    Post post = new Post(requestDto);
+  @Transactional
+  public String createPost(PostCreateRequestDto requestDto, User user) {
+    Post post = new Post(requestDto, user);
     postRepository.save(post);
     return "게시글 작성이 완료되었습니다.";
   }
@@ -57,18 +58,38 @@ public class PostServiceImpl implements PostService {
     return new PostResponseDto(post);
   }
 
+  @Transactional
   @Override
-  public PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto) {
+  public PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto, User user) {
     Post post = _findPost(postId);
-    post.update(requestDto);
+
+    // exception처리 후 살릴 부분
+    // admin과 글 작성자만 수정할 수 있는 기능
+//    if (user.getUserRole() != UserRoleEnum.ADMIN) {
+//      if (!post.getUser().getId().equals(user.getId())) {
+//        throw new IllegalAccessException("글 작성자만 수정이 가능합니다.");
+//      }
+//    }
+
+    post.updatePost(requestDto);
     return new PostUpdateResponseDto(post);
   }
 
 
+  @Transactional
   @Override
-  public String deletePost(Long postId) {
+  public String deletePost(Long postId, User user) {
     Post post = _findPost(postId);
-    postRepository.delete(post);
+
+    // exception처리 후 살릴 부분
+    // admin과 글 작성자만 수정할 수 있는 기능
+//    if (user.getUserRole() != UserRoleEnum.ADMIN) {
+//      if (!post.getUser().getId().equals(user.getId())) {
+//        throw new IllegalAccessException("글 작성자만 수정이 가능합니다.");
+//      }
+//    }
+
+    postRepository.deleteById(postId);
     return "게시글이 삭제되었습니다.";
   }
 

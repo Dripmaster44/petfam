@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Post {
+public class Post extends TimeStamped {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,30 +42,22 @@ public class Post {
   private Integer likes = 0;
 
   @JoinColumn
-  @OneToMany
+  @OneToMany(mappedBy = "post")
   private List<Comment> comments = new ArrayList<>();
-
 
   private CategoryEnum category;
 
-  // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
-  @Builder
-  public Post(Long id, String title, String content, String image, User user) {
-    this.id = id;
-    this.user = user;
-    this.title = title;
-    this.content = content;
-    this.image = image;
-    this.likes = 0;
-  }
 
-  public Post(PostCreateRequestDto requestDto) {
+  @Builder
+  public Post(PostCreateRequestDto requestDto, User user) {
     this.title = requestDto.getTitle();
     this.content = requestDto.getContent();
     this.image = requestDto.getImage();
+    this.user = user;
+    this.likes = 0;
   }
 
-  public void update(PostUpdateRequestDto dto) {
+  public void updatePost(PostUpdateRequestDto dto) {
     this.title = dto.getTitle();
     this.content = dto.getContent();
     this.image = dto.getImage();
