@@ -43,7 +43,6 @@ public class TalkServiceImpl implements TalkService {
 
       return getMessages(talk.getId(), user);
     } else {
-      System.out.println("-----------------------"+receiveId+ user.getId()+"--------------------------------------------------------");
       Talk talk = _findTalk(receiveId, user.getId());
       Message message = new Message(talk.getId(), user.getNickname(), messageRequestDto);
       messageRepository.save(message);
