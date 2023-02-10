@@ -5,7 +5,6 @@ import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
-import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
@@ -51,11 +50,6 @@ public class PostServiceImpl implements PostService {
   @Override
   public PostResponseDto getSelectPost(Long postId) {
     Post post = _findPost(postId);
-    List<Comment> comments = commentRepository.findAllByPost(post);
-    for (Comment comment : comments) {
-      comment.setReComment(reCommentRepository.findAllByComment(comment));
-    }
-    post.setComments(comments);
     return new PostResponseDto(post);
   }
 
