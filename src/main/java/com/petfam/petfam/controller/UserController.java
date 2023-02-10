@@ -53,10 +53,11 @@ public class UserController {
         .body(userService.AdminSignin(requestDto, response));
   }
 
-  @PostMapping("/signout")
-  public ResponseEntity<String> signout(HttpServletRequest request) {
-    return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request));
-  }
+	@PostMapping("/signout")
+	public ResponseEntity<String> signout(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request,userDetails.getUsername()));
+	}
+
 
   @PatchMapping("/profiles")
   public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdateDto profileUpdateDto,
@@ -72,10 +73,12 @@ public class UserController {
         .body(userService.getProfile(userDetails.getUser().getId()));
   }
 
+
   @GetMapping("/profiles/{userId}")
   public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long userId) {
     return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userId));
   }
+
 
   @PostMapping("/refresh")
   public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {

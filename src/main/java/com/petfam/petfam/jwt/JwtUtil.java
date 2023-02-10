@@ -49,7 +49,7 @@ public class JwtUtil {
     key = Keys.hmacShaKeyFor(bytes);                       //Key로 변환시켜 key로 넣어준다
   }
 
-  public static Long getRefreshTokenTime() {
+  public Long getRefreshTokenTime() {
     return REFRESH_TOKEN_TIME;
   }
 
@@ -155,13 +155,13 @@ public class JwtUtil {
 //
 //
 //  }
-//  //남은 시간 계산
-//  public long getRemainMilliSeconds(String token) {
-//    Claims info = getUserInfoFromToken(token);
-//    Date expiration = info.getExpiration();
-//    Date now = new Date();
-//    return expiration.getTime() - now.getTime();
-//  }
+  //남은 시간 계산
+  public long getRemainMilliSeconds(String token) {
+    Claims info = getUserInfoFromToken(token);
+    Date expiration = info.getExpiration();
+    Date now = new Date();
+    return expiration.getTime() - now.getTime();
+  }
 
 
 }

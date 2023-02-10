@@ -2,6 +2,7 @@ package com.petfam.petfam.config;
 
 
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -26,6 +27,9 @@ public class WebSecurityConfig {
 
 
   private final JwtUtil jwtUtil;
+  private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
+
+
 
 
   @Bean
@@ -44,18 +48,19 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable();
 
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-        .requestMatchers("/users/signin").permitAll()
-        .requestMatchers("/users/admin/signup").permitAll()
-        .requestMatchers("/users/admin/signin").permitAll()
-        .requestMatchers("/users/refresh").permitAll()
-        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
-        .requestMatchers(HttpMethod.GET, "/posts").permitAll()
-        .anyRequest().authenticated()
-        .and()
-        .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
+                .requestMatchers("/users/signin").permitAll()
+                .requestMatchers("/users/admin/signup").permitAll()
+                .requestMatchers("/users/admin/signin").permitAll()
+                .requestMatchers("/users/refresh").permitAll()
+                .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+                
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.formLogin().disable();
 
