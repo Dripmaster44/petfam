@@ -14,6 +14,9 @@ import com.petfam.petfam.repository.ReCommentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +37,29 @@ public class PostServiceImpl implements PostService {
     return "게시글 작성이 완료되었습니다.";
   }
 
-  @Transactional(readOnly = true)
-  @Override
-  public List<AllPostResponseDto> getAllPosts() {
-    List<Post> posts = postRepository.findAll();
-    List<AllPostResponseDto> allPostResponseDtos = new ArrayList<>();
+//  @Transactional(readOnly = true)
+//  @Override
+//  public List<AllPostResponseDto> getAllPosts() {
+//    List<Post> posts = postRepository.findAll();
+//    List<AllPostResponseDto> allPostResponseDtos = new ArrayList<>();
+//
+//    for (Post post : posts) {
+//      allPostResponseDtos.add(new AllPostResponseDto(post));
+//    }
+//    return allPostResponseDtos;
+//  }
+@Transactional(readOnly = true)
+@Override
+public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
+  Page<Post> posts = postRepository.findAll(pageable);
+  List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
 
-    for (Post post : posts) {
-      allPostResponseDtos.add(new AllPostResponseDto(post));
-    }
-    return allPostResponseDtos;
+  for (Post post : posts) {
+    AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
+    allPostResponseDtoList.add(allPostResponseDto);
   }
+  return new PageImpl<>(allPostResponseDtoList,pageable,posts.getTotalElements());
+}
 
   @Transactional(readOnly = true)
   @Override
