@@ -27,59 +27,59 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
-	private final UserServiceImpl userService;
+  private final UserServiceImpl userService;
 
-	@PostMapping("/signup")
-	public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.userSignup(requestDto));
-	}
+  @PostMapping("/signup")
+  public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(userService.userSignup(requestDto));
+  }
 
-	@PostMapping("/admin/signup")
-	public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.adminSignup(requestDto));
-	}
+  @PostMapping("/admin/signup")
+  public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(userService.adminSignup(requestDto));
+  }
 
-	@PostMapping("/signin")
-	public ResponseEntity<String> signin(@RequestBody SigninRequestDto signinRequestDto,
-			HttpServletResponse response) {
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(userService.signin(signinRequestDto, response));
-	}
+  @PostMapping("/signin")
+  public ResponseEntity<String> signin(@RequestBody SigninRequestDto signinRequestDto,
+      HttpServletResponse response) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(userService.signin(signinRequestDto, response));
+  }
 
-	@PostMapping("/admin/signin")
-	public ResponseEntity<String> adminSignin(@RequestBody AdminSigninRequestDto requestDto,
-			HttpServletResponse response) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(userService.AdminSignin(requestDto, response));
-	}
+  @PostMapping("/admin/signin")
+  public ResponseEntity<String> adminSignin(@RequestBody AdminSigninRequestDto requestDto,
+      HttpServletResponse response) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(userService.AdminSignin(requestDto, response));
+  }
 
-	@PostMapping("/signout")
-	public ResponseEntity<String> signout(HttpServletRequest request) {
-		return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request));
-	}
+  @PostMapping("/signout")
+  public ResponseEntity<String> signout(HttpServletRequest request) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request));
+  }
 
-	@PatchMapping("/profiles")
-	public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdateDto profileUpdateDto,
-			@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(userService.updateProfile(profileUpdateDto, userDetails.getUser()));
-	}
+  @PatchMapping("/profiles")
+  public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdateDto profileUpdateDto,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(userService.updateProfile(profileUpdateDto, userDetails.getUser()));
+  }
 
-	@GetMapping("/profiles")
-	public ResponseEntity<ProfileResponseDto> getProfile(
-			@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(userService.getProfile(userDetails.getUser().getId()));
-	}
+  @GetMapping("/profiles")
+  public ResponseEntity<ProfileResponseDto> getProfile(
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(userService.getProfile(userDetails.getUser().getId()));
+  }
 
-	@GetMapping("/profiles/{userId}")
-	public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long userID) {
-		return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userID));
-	}
+  @GetMapping("/profiles/{userId}")
+  public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long userId) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userId));
+  }
 
-	@PostMapping("/refresh")
-	public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {
-		return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request, response));
-	}
+  @PostMapping("/refresh")
+  public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request, response));
+  }
 
 }
