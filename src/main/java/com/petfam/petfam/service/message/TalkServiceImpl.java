@@ -7,6 +7,7 @@ import com.petfam.petfam.entity.Talk;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.repository.MessageRepository;
 import com.petfam.petfam.repository.TalkRepository;
+import com.petfam.petfam.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,14 @@ public class TalkServiceImpl implements TalkService {
 
   private final TalkRepository talkRepository;
   private final MessageRepository messageRepository;
+  private final UserRepository userRepository;
 
   @Override
   @Transactional
   public List<MessageResponseDto> sendMessage(Long receiveId, User user,
       MessageRequestDto messageRequestDto) {
+    if(userRepository.findById(receiveId).isEmpty()) {throw new IllegalArgumentException("해당유저가 존재하지 않습니다.");}
+
     Optional<Talk> talkCk = talkRepository.findByApplyIdAndReceiveId(user.getId(), receiveId);
     Optional<Talk> talkCk2 = talkRepository.findByApplyIdAndReceiveId(receiveId, user.getId());
 
