@@ -15,7 +15,6 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
@@ -46,9 +44,11 @@ public class JwtUtil {
 
   @PostConstruct //의존성주입이 이루어진후 초기화 하는 매서드 로직이 실행되기전에 수행된다.
   public void init() {
-    byte[] bytes = Base64.getDecoder().decode(secretKey);  //secretKey는 64진법으로 이루어져서 이것을 해독해서 byte코드로 만들고
+    byte[] bytes = Base64.getDecoder()
+        .decode(secretKey);  //secretKey는 64진법으로 이루어져서 이것을 해독해서 byte코드로 만들고
     key = Keys.hmacShaKeyFor(bytes);                       //Key로 변환시켜 key로 넣어준다
   }
+
   public static Long getRefreshTokenTime() {
     return REFRESH_TOKEN_TIME;
   }
@@ -82,12 +82,15 @@ public class JwtUtil {
 
   //클라이언트 요청에서 토큰을 찾아내고 BEARER_PREFIX를 제거하여 key로 해독가능한 상태로 만들어준다.
   public String resolveToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader(AUTHORIZATION_HEADER);  //HttpServletRequest매서드 .getHeader로 request에서 토큰을 찾는다.
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {  //찾은 토큰이 text를 가지고있고 시작부분이 위에 정한 BEARER_PREFIX 와 같다면
+    String bearerToken = request.getHeader(
+        AUTHORIZATION_HEADER);  //HttpServletRequest매서드 .getHeader로 request에서 토큰을 찾는다.
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(
+        BEARER_PREFIX)) {  //찾은 토큰이 text를 가지고있고 시작부분이 위에 정한 BEARER_PREFIX 와 같다면
       return bearerToken.substring(7); //"Bearer " 를 지워주기위해 substring을 사용한다.
     }
     return null;
   }
+
   public String resolveRefreshToken(HttpServletRequest request) {
     String bearerToken = request.getHeader(REFRESH_AUTHORIZATION_HEADER);
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(REFRESH_PREFIX)) {
@@ -103,21 +106,21 @@ public class JwtUtil {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
       return true;
     } catch (SecurityException | MalformedJwtException e) {
-      log.info("Invalid JWT signature");
+      throw new MalformedJwtException("Invalid JWT signature");
     } catch (ExpiredJwtException e) {
-      log.info("Expired JWT token");
+      throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Expired JWT token");
     } catch (UnsupportedJwtException e) {
-      log.info("Unsupported JWT token");
+      throw new UnsupportedJwtException("Unsupported JWT token");
     } catch (IllegalArgumentException e) {
-      log.info("JWT claims is empty");
+      throw new IllegalArgumentException("JWT claims is empty");
     }
-    return false;
   }
+
   // 토큰에서 사용자 정보 가져오기
   public Claims getUserInfoFromToken(String token) {
     try {
       return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    }catch(ExpiredJwtException e) {
+    } catch (ExpiredJwtException e) {
       return e.getClaims();
     }
   }
@@ -125,7 +128,7 @@ public class JwtUtil {
   // 인증 객체 생성
   public Authentication createAuthentication(String username) {
     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-    return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 
 //  //리프레시토큰으로 재발급시 사용
@@ -159,8 +162,6 @@ public class JwtUtil {
 //    Date now = new Date();
 //    return expiration.getTime() - now.getTime();
 //  }
-
-
 
 
 }
