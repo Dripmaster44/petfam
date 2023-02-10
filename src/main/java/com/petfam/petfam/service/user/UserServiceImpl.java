@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
       return "관리자 회원가입완료";
     } else {
-      return "관리자 암호가 일치하지 않습니다.";
+      throw new IllegalArgumentException("관리자 암호가 일치하지 않습니다");
     }
   }
 
