@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
     String refreshToken = jwtUtil.resolveRefreshToken(request); //리프레시토큰
 
     if (!jwtUtil.validateToken(refreshToken)) {
-      return "다시 로그인 해주세요.";
+      throw new IllegalArgumentException("다시 로그인 해주세요");
     }
 
     Claims accessInfo = jwtUtil.getUserInfoFromToken(accessToken);
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
           jwtUtil.createToken(user.getUsername(), user.getUserRole()));
       return "로그인이 연장되었습니다.";
     } else {
-      return "다시 로그인 해주세요.";
+      throw new IllegalArgumentException("다시 로그인 해주세요");
     }
   }
 
