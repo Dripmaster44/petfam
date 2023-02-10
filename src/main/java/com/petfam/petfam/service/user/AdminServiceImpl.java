@@ -7,6 +7,9 @@ import com.petfam.petfam.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,17 +20,30 @@ public class AdminServiceImpl implements AdminService {
 
   private final UserRepository userRepository;
 
-  @Override
-  @Transactional(readOnly = true)
-  public List<UserResponseDto> getUsers() {
+//  @Override
+//  @Transactional(readOnly = true)
+//  public List<UserResponseDto> getUsers() {
+//
+//    List<User> users = userRepository.findAll();
+//    List<UserResponseDto> userResponseDtos = new ArrayList<>();
+//
+//    for (User user : users) {
+//      userResponseDtos.add(new UserResponseDto(user));
+//    }
+//    return userResponseDtos;
+//  }
+@Override
+@Transactional(readOnly = true)
+public Page<UserResponseDto> getUsers(Pageable pageable) {
 
-    List<User> users = userRepository.findAll();
-    List<UserResponseDto> userResponseDtos = new ArrayList<>();
+  Page<User> users = userRepository.findAll(pageable);
+  List<UserResponseDto> userResponseDtoList = new ArrayList<>();
 
-    for (User user : users) {
-      userResponseDtos.add(new UserResponseDto(user));
-    }
-    return userResponseDtos;
+  for (User user : users) {
+    UserResponseDto userResponseDto = new UserResponseDto(user);
+    userResponseDtoList.add(userResponseDto);
   }
+  return new PageImpl<>(userResponseDtoList,pageable,users.getTotalElements());
+}
 
 }

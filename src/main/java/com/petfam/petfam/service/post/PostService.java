@@ -7,6 +7,8 @@ import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.User;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +18,8 @@ public interface PostService {
   String createPost(PostCreateRequestDto requestDto, User user);
 
   // getAllPosts
-  List<AllPostResponseDto> getAllPosts();
+//  List<AllPostResponseDto> getAllPosts();
+  Page<AllPostResponseDto> getAllPosts(Pageable pageable);
 
   // getSelectPost
   PostResponseDto getSelectPost(Long postId);
