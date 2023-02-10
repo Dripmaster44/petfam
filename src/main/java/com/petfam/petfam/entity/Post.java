@@ -69,8 +69,4 @@ public class Post extends TimeStamped {
       likes = 0;
     }
   }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
-  }
 }
