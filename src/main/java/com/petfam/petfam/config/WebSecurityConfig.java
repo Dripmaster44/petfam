@@ -1,8 +1,8 @@
 package com.petfam.petfam.config;
 
 
-import com.petfam.petfam.jwt.JwtUtil;
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,38 +25,40 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
 
-    private final JwtUtil jwtUtil;
+  private final JwtUtil jwtUtil;
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();}
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return (web) -> web.ignoring()
+        .requestMatchers(PathRequest.toH2Console())
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf().disable();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-                .requestMatchers("/users/signin").permitAll()
-                .requestMatchers("/users/admin/signup").permitAll()
-                .requestMatchers("/users/refresh").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts").permitAll()
-                .anyRequest().authenticated()
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+    http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
+        .requestMatchers("/users/signin").permitAll()
+        .requestMatchers("/users/admin/signup").permitAll()
+        .requestMatchers("/users/admin/signin").permitAll()
+        .requestMatchers("/users/refresh").permitAll()
+        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/posts").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        http.formLogin().disable();
+    http.formLogin().disable();
 
-
-        return http.build();
-    }
+    return http.build();
+  }
 }

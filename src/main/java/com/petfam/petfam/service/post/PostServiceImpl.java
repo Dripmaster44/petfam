@@ -81,9 +81,7 @@ public class PostServiceImpl implements PostService {
   @Override
   public String deletePost(Long postId, User user) {
     Post post = _findPost(postId);
-
-    // exception처리 후 살릴 부분
-    // admin과 글 작성자만 수정할 수 있는 기능
+    
     if (user.getUserRole() != UserRoleEnum.ADMIN) {
       if (!post.getUser().getId().equals(user.getId())) {
         throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
