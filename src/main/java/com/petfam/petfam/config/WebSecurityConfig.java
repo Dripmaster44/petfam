@@ -3,6 +3,7 @@ package com.petfam.petfam.config;
 
 import com.petfam.petfam.jwt.JwtUtil;
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class WebSecurityConfig {
 
 
     private final JwtUtil jwtUtil;
+    private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
 
 
     @Bean
@@ -52,7 +54,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts").permitAll()
                 .anyRequest().authenticated()
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
 
         http.formLogin().disable();
 

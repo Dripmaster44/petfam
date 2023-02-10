@@ -7,14 +7,20 @@ import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
+import com.petfam.petfam.entity.RefreshToken;
+import com.petfam.petfam.entity.SignoutAccessToken;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.jwt.JwtUtil;
+import com.petfam.petfam.redis.CacheKey;
+import com.petfam.petfam.repository.RefreshTokenRedisRepository;
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import com.petfam.petfam.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +33,8 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
   private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+  private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
 
   @Override
   @Transactional
@@ -74,15 +82,28 @@ public class UserServiceImpl implements UserService {
     if(!passwordEncoder.matches(signinRequestDto.getPassword(),user.getPassword())) {
       throw new IllegalArgumentException("아이디와 비밀번호를 확인해주세요");
     }
-    response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(),user.getUserRole()));
-    response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,jwtUtil.refreshToken(user.getUsername(),user.getUserRole()));
+    String accessToken = jwtUtil.createToken(user.getUsername(),user.getUserRole());
+    String refreshToken = jwtUtil.refreshToken(user.getUsername(),user.getUserRole());
+
+    RefreshToken refreshToken1 = new RefreshToken(user.getUsername(),refreshToken,jwtUtil.getRefreshTokenTime());
+    refreshTokenRedisRepository.save(refreshToken1);
+
+    response.addHeader(JwtUtil.AUTHORIZATION_HEADER,accessToken);
+    response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
+
     return "로그인완료";
   }
 
   @Override
   @Transactional
-  public String signout(HttpServletRequest request) {
-    return null;
+  @CacheEvict(value = CacheKey.USER, key = "#username")
+  public String signout(HttpServletRequest request,String username) {
+    String accessToken = jwtUtil.resolveToken(request);
+    long remainMilliSeconds = jwtUtil.getRemainMilliSeconds(accessToken);
+    refreshTokenRedisRepository.deleteById(username);
+    signoutAccessTokenRedisRepository.save(SignoutAccessToken.of(accessToken,username, remainMilliSeconds));
+
+    return "로그아웃이 되었습니다.";
   } //추후 구현
 
   @Override

@@ -44,8 +44,8 @@ public class UserController {
 	}
 
 	@PostMapping("/signout")
-	public ResponseEntity<String> signout(HttpServletRequest request){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request));
+	public ResponseEntity<String> signout(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.signout(request,userDetails.getUsername()));
 	}
 
 	@PatchMapping("/profiles")
@@ -59,8 +59,8 @@ public class UserController {
 	}
 
 	@GetMapping("/profiles/{userId}")
-	public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long userID){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userID));
+	public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long userId){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getProfile(userId));
 	}
 
 	@PostMapping("/refresh")

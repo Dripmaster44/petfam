@@ -14,7 +14,7 @@ public interface UserService {
   public String userSignup(UserSignupRequestDto usersignupRequestDto);
   public String adminSignup(AdminSignupRequestDto adminsignupRequestDto);
   public String signin(SigninRequestDto signinRequestDto, HttpServletResponse response);
-  public String signout(HttpServletRequest request);
+  public String signout(HttpServletRequest request,String username);
   public String updateProfile(ProfileUpdateDto profileUpdateDto, User user);
   public ProfileResponseDto getProfile(Long userId);
   public String refresh(HttpServletRequest request,HttpServletResponse response);

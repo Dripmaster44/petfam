@@ -49,7 +49,7 @@ public class JwtUtil {
     byte[] bytes = Base64.getDecoder().decode(secretKey);  //secretKey는 64진법으로 이루어져서 이것을 해독해서 byte코드로 만들고
     key = Keys.hmacShaKeyFor(bytes);                       //Key로 변환시켜 key로 넣어준다
   }
-  public static Long getRefreshTokenTime() {
+  public Long getRefreshTokenTime() {
     return REFRESH_TOKEN_TIME;
   }
 
@@ -152,13 +152,13 @@ public class JwtUtil {
 //
 //
 //  }
-//  //남은 시간 계산
-//  public long getRemainMilliSeconds(String token) {
-//    Claims info = getUserInfoFromToken(token);
-//    Date expiration = info.getExpiration();
-//    Date now = new Date();
-//    return expiration.getTime() - now.getTime();
-//  }
+  //남은 시간 계산
+  public long getRemainMilliSeconds(String token) {
+    Claims info = getUserInfoFromToken(token);
+    Date expiration = info.getExpiration();
+    Date now = new Date();
+    return expiration.getTime() - now.getTime();
+  }
 
 
 

@@ -6,6 +6,7 @@ package com.petfam.petfam.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petfam.petfam.dto.SecurityExceptionDto;
 
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
+  private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
 
 
   @Override
@@ -35,6 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String accessToken = jwtUtil.resolveToken(request);
 
     if(accessToken != null) {
+      checkLogout(accessToken);
       if(!jwtUtil.validateToken(accessToken)) {
         jwtExceptionHandler(response,"Token Error", 400);
         return;
@@ -68,7 +71,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
   }
 
-
+  private void checkLogout(String accessToken) {
+    if (signoutAccessTokenRedisRepository.existsById(accessToken)) {
+      throw new IllegalArgumentException("이미 로그아웃된 회원입니다.");
+    }
+  }
 
 
 
