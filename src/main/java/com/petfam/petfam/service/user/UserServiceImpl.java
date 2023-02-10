@@ -28,6 +28,8 @@ public class UserServiceImpl implements UserService {
   private final JwtUtil jwtUtil;
   private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
+
+  // 유저 회원가입
   @Override
   @Transactional
   public String userSignup(UserSignupRequestDto usersignupRequestDto) {
@@ -46,6 +48,8 @@ public class UserServiceImpl implements UserService {
     return "회원가입완료";
   }
 
+
+  // 관리자 회원가입
   @Override
   @Transactional
   public String adminSignup(AdminSignupRequestDto adminsignupRequestDto) {
@@ -67,6 +71,7 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  // 유저 로그인
   @Override
   @Transactional
   public String signin(SigninRequestDto signinRequestDto, HttpServletResponse response) {
@@ -84,6 +89,7 @@ public class UserServiceImpl implements UserService {
     return "로그인완료";
   }
 
+  // 관리자 로그인
   @Override
   @Transactional
   public String AdminSignin(AdminSigninRequestDto adminSigninRequestDto,
@@ -106,12 +112,15 @@ public class UserServiceImpl implements UserService {
     return "로그인완료";
   }
 
+  // 로그아웃
   @Override
   @Transactional
   public String signout(HttpServletRequest request) {
     return null;
   } //추후 구현
 
+
+  // 프로필 업데이트
   @Override
   @Transactional
   public String updateProfile(ProfileUpdateDto profileUpdateDto, User user) {
@@ -120,6 +129,7 @@ public class UserServiceImpl implements UserService {
     return "프로필 수정 완료";
   }
 
+  // 프로필 가져오기
   @Override
   @Transactional
   public ProfileResponseDto getProfile(Long userId) {
@@ -127,6 +137,7 @@ public class UserServiceImpl implements UserService {
     return new ProfileResponseDto(user);
   }
 
+  // 토큰 리프레쉬
   @Override
   @Transactional
   public String refresh(HttpServletRequest request, HttpServletResponse response) {
