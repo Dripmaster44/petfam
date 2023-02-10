@@ -8,6 +8,7 @@ import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.repository.ReCommentRepository;
@@ -65,11 +66,11 @@ public class PostServiceImpl implements PostService {
 
     // exception처리 후 살릴 부분
     // admin과 글 작성자만 수정할 수 있는 기능
-//    if (user.getUserRole() != UserRoleEnum.ADMIN) {
-//      if (!post.getUser().getId().equals(user.getId())) {
-//        throw new IllegalAccessException("글 작성자만 수정이 가능합니다.");
-//      }
-//    }
+    if (user.getUserRole() != UserRoleEnum.ADMIN) {
+      if (!post.getUser().getId().equals(user.getId())) {
+        throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
+      }
+    }
 
     post.updatePost(requestDto);
     return new PostUpdateResponseDto(post);
@@ -83,11 +84,11 @@ public class PostServiceImpl implements PostService {
 
     // exception처리 후 살릴 부분
     // admin과 글 작성자만 수정할 수 있는 기능
-//    if (user.getUserRole() != UserRoleEnum.ADMIN) {
-//      if (!post.getUser().getId().equals(user.getId())) {
-//        throw new IllegalAccessException("글 작성자만 수정이 가능합니다.");
-//      }
-//    }
+    if (user.getUserRole() != UserRoleEnum.ADMIN) {
+      if (!post.getUser().getId().equals(user.getId())) {
+        throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
+      }
+    }
 
     postRepository.deleteById(postId);
     return "게시글이 삭제되었습니다.";

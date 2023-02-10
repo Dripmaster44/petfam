@@ -2,7 +2,9 @@ package com.petfam.petfam.dto.post;
 
 
 import com.petfam.petfam.entity.Post;
+import lombok.Getter;
 
+@Getter
 public class PostUpdateResponseDto {
 
   private String title;

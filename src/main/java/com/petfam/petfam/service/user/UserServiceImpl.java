@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public String updateProfile(ProfileUpdateDto profileUpdateDto,User user) {
     user.updateProfile(profileUpdateDto);
+    userRepository.save(user);
     return "프로필 수정 완료";
   }
 
@@ -110,7 +111,7 @@ public class UserServiceImpl implements UserService {
     Claims accessInfo = jwtUtil.getUserInfoFromToken(accessToken);
     Claims refreshInfo = jwtUtil.getUserInfoFromToken(refreshToken);
 
-    if(accessInfo.equals(refreshInfo)) {
+    if(accessInfo.getSubject().equals(refreshInfo.getSubject())) {
         User user = _findUser(accessInfo.getSubject());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(),user.getUserRole()));
         return "로그인이 연장되었습니다.";

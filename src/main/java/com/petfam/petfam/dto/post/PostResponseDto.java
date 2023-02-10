@@ -3,6 +3,7 @@ package com.petfam.petfam.dto.post;
 import com.petfam.petfam.dto.comment.CommentResponseDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ public class PostResponseDto {
   private Long writerId;
   private Integer likes;
   private String content;
-  private List<CommentResponseDto> comments; // 리스트
+  private List<CommentResponseDto> comments= new ArrayList<>(); // 리스트
 
   public PostResponseDto(Post post) {
     this.title = post.getTitle();

@@ -28,6 +28,7 @@ public class ReCommentServiceImpl implements ReCommentService {
     user = _getUser(user.getUsername());
     Comment comment = _getComment(commentId);
     ReComment reComment = new ReComment(comment, user, reCommentRequestDto);
+    reCommentRepository.save(reComment);
     return "댓글 생성이 완료되었습니다.";
   }
 
@@ -40,6 +41,7 @@ public class ReCommentServiceImpl implements ReCommentService {
       if (!user.isAdmin()) {
           if (reComment.getUser().getUsername().equals(user.getUsername())) {
               reComment.updateReComment(reCommentRequestDto.getContent());
+              reCommentRepository.save(reComment);
           } else {
               throw new IllegalArgumentException("자신이 작성한 댓글만 수정이 가능합니다.");
           }
