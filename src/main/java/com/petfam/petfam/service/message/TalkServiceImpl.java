@@ -9,6 +9,7 @@ import com.petfam.petfam.repository.MessageRepository;
 import com.petfam.petfam.repository.TalkRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +25,32 @@ public class TalkServiceImpl implements TalkService {
   @Transactional
   public List<MessageResponseDto> sendMessage(Long receiveId, User user,
       MessageRequestDto messageRequestDto) {
-    if (talkRepository.findByApplyIdAndReceiveId(user.getId(), receiveId).isEmpty()) {
+    Optional<Talk> talkCk = talkRepository.findByApplyIdAndReceiveId(user.getId(), receiveId);
+    Optional<Talk> talkCk2 = talkRepository.findByApplyIdAndReceiveId(receiveId, user.getId());
+
+    if (talkCk.isEmpty() && talkCk2.isEmpty()) {
       Talk talk = new Talk(user.getId(), receiveId);
+      talkRepository.save(talk);
       Message message = new Message(talk.getId(), user.getNickname(), messageRequestDto);
       messageRepository.save(message);
+
+      return getMessages(talk.getId(), user);
+    } else if(talkCk.isPresent()){
+
+      Talk talk = _findTalk(user.getId(),receiveId);
+      Message message = new Message(talk.getId(), user.getNickname(), messageRequestDto);
+      messageRepository.save(message);
+
       return getMessages(talk.getId(), user);
     } else {
+      System.out.println("-----------------------"+receiveId+ user.getId()+"--------------------------------------------------------");
       Talk talk = _findTalk(receiveId, user.getId());
       Message message = new Message(talk.getId(), user.getNickname(), messageRequestDto);
       messageRepository.save(message);
+
       return getMessages(talk.getId(), user);
     }
+
   }
 
   @Override
@@ -53,17 +69,15 @@ public class TalkServiceImpl implements TalkService {
     return messageResponseDtos;
   }
 
-  private Talk _findTalk(Long receiveId, Long userId) {
-    Talk talk = talkRepository.findByApplyIdAndReceiveId(userId, receiveId).orElseThrow(
+  private Talk _findTalk(Long applyId, Long receiveId) {
+    return talkRepository.findByApplyIdAndReceiveId(applyId, receiveId).orElseThrow(
         () -> new IllegalArgumentException("톡방이 존재하지 않습니다.")
     );
-    return talk;
   }
 
   private Talk _findTalk(Long talkId) {
-    Talk talk = talkRepository.findById(talkId).orElseThrow(
+    return talkRepository.findById(talkId).orElseThrow(
         () -> new IllegalArgumentException("톡방이 존재하지 않습니다.")
     );
-    return talk;
   }
 }
