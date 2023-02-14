@@ -30,6 +30,11 @@ public class UserController {
 
   private final UserServiceImpl userService;
 
+  @GetMapping("/signup")
+  public ModelAndView signupPage() {
+    return new ModelAndView("signup");
+  }
+
   @PostMapping("/signup")
   public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.userSignup(requestDto));
@@ -39,6 +44,7 @@ public class UserController {
   public ModelAndView loginPage() {
     return new ModelAndView("login");
   }
+
 
   @PostMapping("/admin/signup")
   public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
