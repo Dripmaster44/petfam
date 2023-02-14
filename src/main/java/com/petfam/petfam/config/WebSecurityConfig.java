@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/admin/signup").permitAll()
                 .requestMatchers("/users/admin/signin").permitAll()
                 .requestMatchers("/users/refresh").permitAll()
+                .requestMatchers("/users/login-page").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts").permitAll()
                 .anyRequest().authenticated()

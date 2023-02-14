@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +33,11 @@ public class UserController {
   @PostMapping("/signup")
   public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.userSignup(requestDto));
+  }
+
+  @GetMapping("/login-page")
+  public ModelAndView loginPage() {
+    return new ModelAndView("login");
   }
 
   @PostMapping("/admin/signup")
