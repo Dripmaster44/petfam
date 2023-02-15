@@ -21,7 +21,14 @@ class Output extends Thread {
       while (!socket.isClosed() && !Thread.currentThread().isInterrupted()) {
         String input = scanner.nextLine();
         out.println(input);
+        if (input.equals("종료")) {
+          Thread.currentThread().interrupt();
+          socket.close();
+          break;
+        }
       }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 }

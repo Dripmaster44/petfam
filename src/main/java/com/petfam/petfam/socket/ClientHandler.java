@@ -25,6 +25,11 @@ public class ClientHandler extends Thread{
         if (in.ready()) {
           String message = in.readLine();
           System.out.println(message);
+          if (message.equals("종료")) {
+            Thread.currentThread().interrupt();
+            socket.close();
+            break;
+          }
           broadcast(message);
         }
       }

@@ -20,9 +20,17 @@ class Input extends Thread {
     try{
       while (!socket.isClosed() && !Thread.currentThread().isInterrupted()) {
         if (in.ready()) {
-          System.out.println(in.readLine());
+          String input = in.readLine();
+          System.out.println(input);
+          if (input.equals("종료")) {
+            Thread.currentThread().interrupt();
+            socket.close();
+            break;
+          }
         }
       }
+      System.out.println("서버를 종료합니다.");
+      System.exit(0);
     } catch (IOException e) {
       e.printStackTrace();
     }
