@@ -84,7 +84,6 @@ public class JwtUtil {
   public String resolveToken(HttpServletRequest request) {
     String bearerToken = request.getHeader(
         AUTHORIZATION_HEADER);  //HttpServletRequest매서드 .getHeader로 request에서 토큰을 찾는다.
-    System.out.println(request.getMethod());
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(
         BEARER_PREFIX)) {  //찾은 토큰이 text를 가지고있고 시작부분이 위에 정한 BEARER_PREFIX 와 같다면
       return bearerToken.substring(7); //"Bearer " 를 지워주기위해 substring을 사용한다.

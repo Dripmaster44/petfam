@@ -30,17 +30,12 @@ public class UserController {
 
   private final UserServiceImpl userService;
 
-//  @GetMapping("/signup")
-//  public ModelAndView signupPage() {
-//    return new ModelAndView("signup");
-//  }
 
   @PostMapping("/signup")
   public String userSignup(@RequestBody UserSignupRequestDto requestDto) {
     userService.userSignup(requestDto);
     return "success";
   }
-
 
 
   @PostMapping("/admin/signup")
