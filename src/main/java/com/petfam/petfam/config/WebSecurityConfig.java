@@ -18,12 +18,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
 
 
   private final JwtUtil jwtUtil;
@@ -55,12 +57,6 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/admin/signin").permitAll()
                 .requestMatchers("/users/refresh").permitAll()
                 .requestMatchers("/users/login-page").permitAll()
-                .requestMatchers("/users/**").permitAll()
-                .requestMatchers("/admin/**").permitAll()
-                .requestMatchers("/comments/**").permitAll()
-                .requestMatchers("/posts/**").permitAll()
-                .requestMatchers("/talk/**").permitAll()
-                .requestMatchers("/recomments/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts").permitAll()
                 .anyRequest().authenticated()
@@ -72,5 +68,12 @@ public class WebSecurityConfig {
     http.formLogin().disable();
 
     return http.build();
+  }
+
+  @Override
+  public void addCorsMappings(CorsRegistry corsRegistry) {
+    corsRegistry.addMapping("/**")
+        .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
+        .exposedHeaders("Refresh_authorization","Authorization");
   }
 }

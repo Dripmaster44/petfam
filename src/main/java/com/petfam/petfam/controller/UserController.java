@@ -30,39 +30,37 @@ public class UserController {
 
   private final UserServiceImpl userService;
 
-  @GetMapping("/signup")
-  public ModelAndView signupPage() {
-    return new ModelAndView("signup");
-  }
+//  @GetMapping("/signup")
+//  public ModelAndView signupPage() {
+//    return new ModelAndView("signup");
+//  }
 
   @PostMapping("/signup")
-  public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(userService.userSignup(requestDto));
+  public String userSignup(@RequestBody UserSignupRequestDto requestDto) {
+    userService.userSignup(requestDto);
+    return "success";
   }
 
-  @GetMapping("/login-page")
-  public ModelAndView loginPage() {
-    return new ModelAndView("login");
-  }
 
 
   @PostMapping("/admin/signup")
-  public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(userService.adminSignup(requestDto));
+  public String adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
+    userService.adminSignup(requestDto);
+    return "success";
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<String> signin(@RequestBody SigninRequestDto signinRequestDto,
+  public String signin(@RequestBody SigninRequestDto signinRequestDto,
       HttpServletResponse response) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.signin(signinRequestDto, response));
+     userService.signin(signinRequestDto, response);
+     return "success";
   }
 
   @PostMapping("/admin/signin")
-  public ResponseEntity<String> adminSignin(@RequestBody AdminSigninRequestDto requestDto,
+  public String adminSignin(@RequestBody AdminSigninRequestDto requestDto,
       HttpServletResponse response) {
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(userService.AdminSignin(requestDto, response));
+      userService.AdminSignin(requestDto, response);
+      return "success";
   }
 
 	@PostMapping("/signout")
