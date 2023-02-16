@@ -6,8 +6,10 @@ import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,12 +20,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig {
+@EnableWebMvc
+public class WebSecurityConfig implements WebMvcConfigurer {
 
 
   private final JwtUtil jwtUtil;
@@ -46,7 +54,7 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable();
+        http.cors().and().csrf().disable();
 
 
         http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
@@ -54,6 +62,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/admin/signup").permitAll()
                 .requestMatchers("/users/admin/signin").permitAll()
                 .requestMatchers("/users/refresh").permitAll()
+                .requestMatchers("/users/login-page").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/posts").permitAll()
                 .anyRequest().authenticated()
@@ -66,4 +75,16 @@ public class WebSecurityConfig {
 
     return http.build();
   }
+
+  @Override
+  public void addCorsMappings(CorsRegistry corsRegistry) {
+    corsRegistry.addMapping("/**")
+        .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/")
+        .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
+        .exposedHeaders("Authorization")
+        .allowCredentials(true)
+        .maxAge(3600);
+  }
+
+
 }
