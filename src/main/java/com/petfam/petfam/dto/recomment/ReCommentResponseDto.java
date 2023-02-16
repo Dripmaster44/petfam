@@ -7,13 +7,13 @@ import lombok.Getter;
 public class ReCommentResponseDto {
 
   private String writer;
-  private String conetent;
+  private String content;
 
   private Integer likes;
 
   public ReCommentResponseDto(ReComment recomment) {
     this.writer = recomment.getUser().getNickname();
-    this.conetent = recomment.getContent();
+    this.content = recomment.getContent();
     this.likes = recomment.getLikes();
   }
 }
