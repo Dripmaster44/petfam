@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
     String accessToken = jwtUtil.createToken(user.getUsername(),user.getUserRole());
     String refreshToken = jwtUtil.refreshToken(user.getUsername(),user.getUserRole());
 
-    RefreshToken refreshToken1 = new RefreshToken(user.getUsername(),refreshToken,jwtUtil.getRefreshTokenTime());
+    RefreshToken refreshToken1 = new RefreshToken(user.getUsername(),refreshToken.substring(8),jwtUtil.getRefreshTokenTime());
     refreshTokenRedisRepository.save(refreshToken1);
 
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER,accessToken);
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
     refreshTokenRedisRepository.deleteById(username);
     signoutAccessTokenRedisRepository.save(SignoutAccessToken.of(accessToken,username, remainMilliSeconds));
 
-    return "로그아웃이 되었습니다.";
+    return "success";
   } //추후 구현
 
 
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
   public String updateProfile(ProfileUpdateDto profileUpdateDto, User user) {
     user.updateProfile(profileUpdateDto);
     userRepository.save(user);
-    return "프로필 수정 완료";
+    return "success";
   }
 
   // 프로필 가져오기
@@ -161,21 +161,15 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public String refresh(HttpServletRequest request, HttpServletResponse response) {
-    String accessToken = jwtUtil.resolveToken(request);   //엑세스토큰
     String refreshToken = jwtUtil.resolveRefreshToken(request); //리프레시토큰
 
-    if (!jwtUtil.validateToken(refreshToken)) {
-      throw new IllegalArgumentException("다시 로그인 해주세요");
-    }
-
-    Claims accessInfo = jwtUtil.getUserInfoFromToken(accessToken);
     Claims refreshInfo = jwtUtil.getUserInfoFromToken(refreshToken);
 
-    if (accessInfo.getSubject().equals(refreshInfo.getSubject())) {
-      User user = _findUser(accessInfo.getSubject());
+    if (!refreshInfo.getSubject().isEmpty()) {
+      User user = _findUser(refreshInfo.getSubject());
       response.addHeader(JwtUtil.AUTHORIZATION_HEADER,
           jwtUtil.createToken(user.getUsername(), user.getUserRole()));
-      return "로그인이 연장되었습니다.";
+      return "success";
     } else {
       throw new IllegalArgumentException("다시 로그인 해주세요");
     }

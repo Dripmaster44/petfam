@@ -2,6 +2,7 @@ package com.petfam.petfam.config;
 
 
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.repository.RefreshTokenRedisRepository;
 import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
   private final JwtUtil jwtUtil;
   private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
 
 
@@ -54,20 +56,20 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable();
+    http.cors().and().csrf().disable();
 
 
-        http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-                .requestMatchers("/users/signin").permitAll()
-                .requestMatchers("/users/admin/signup").permitAll()
-                .requestMatchers("/users/admin/signin").permitAll()
-                .requestMatchers("/users/refresh").permitAll()
-                .requestMatchers("/users/login-page").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+    http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
+            .requestMatchers("/users/signin").permitAll()
+            .requestMatchers("/users/admin/signup").permitAll()
+            .requestMatchers("/users/admin/signin").permitAll()
+            .requestMatchers("/users/refresh").permitAll()
+            .requestMatchers("/users/login-page").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
                 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -81,7 +83,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     corsRegistry.addMapping("/**")
         .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/")
         .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
-        .exposedHeaders("Authorization")
+        .exposedHeaders("Authorization","Refresh_authorization")
         .allowCredentials(true)
         .maxAge(3600);
   }
