@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class PostResponseDto {
 
+  private Long id;
   private String title;
   private String image;
   private String writer;
@@ -18,6 +19,7 @@ public class PostResponseDto {
   private List<CommentResponseDto> comments; // 리스트
 
   public PostResponseDto(Post post) {
+    this.id = post.getId();
     this.title = post.getTitle();
     this.image = post.getImage();
     this.content = post.getContent();
