@@ -35,6 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableWebMvc
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig implements WebMvcConfigurer {
 
 
