@@ -1,6 +1,9 @@
 package com.petfam.petfam.config;
 
 
+import static com.petfam.petfam.jwt.JwtUtil.AUTHORIZATION_HEADER;
+import static com.petfam.petfam.jwt.JwtUtil.REFRESH_AUTHORIZATION_HEADER;
+
 import com.petfam.petfam.jwt.JwtAuthFilter;
 import com.petfam.petfam.repository.RefreshTokenRedisRepository;
 import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
@@ -83,7 +86,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     corsRegistry.addMapping("/**")
         .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/")
         .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
-        .exposedHeaders("Authorization","Refresh_authorization")
+        .exposedHeaders(AUTHORIZATION_HEADER,REFRESH_AUTHORIZATION_HEADER)
         .allowCredentials(true)
         .maxAge(3600);
   }

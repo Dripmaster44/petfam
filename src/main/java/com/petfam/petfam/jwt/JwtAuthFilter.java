@@ -39,16 +39,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String accessToken = jwtUtil.resolveToken(request);
     String refreshToken = jwtUtil.resolveRefreshToken(request);
 
-    if(refreshToken != null) {
-      checkRedis(refreshToken);
-      if(!jwtUtil.validateToken(refreshToken)) {
-        jwtExceptionHandler(response,"Token Error", 400);
-        return;
-      }
-      Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
-      setAuthentication(info.getSubject());
-    }
-
     if(accessToken != null) {
       checkLogout(accessToken);
       if (!jwtUtil.validateToken(accessToken)) {
@@ -56,6 +46,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return;
       }
       Claims info = jwtUtil.getUserInfoFromToken(accessToken);
+      setAuthentication(info.getSubject());
+    }
+
+    if(refreshToken != null) {
+      checkRedis(refreshToken);
+      if(!jwtUtil.validateToken(refreshToken)) {
+        jwtExceptionHandler(response,"Token Error", 400);
+        return;
+      }
+      Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
       setAuthentication(info.getSubject());
     }
 
