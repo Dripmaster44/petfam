@@ -7,10 +7,9 @@ import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
-import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.PostRepository;
-import com.petfam.petfam.repository.ReCommentRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceImpl implements PostService {
 
   private final PostRepository postRepository;
-  private final CommentRepository commentRepository;
-  private final ReCommentRepository reCommentRepository;
 
 
   @Override
@@ -38,7 +35,6 @@ public class PostServiceImpl implements PostService {
     postRepository.save(post);
     return "게시글 작성이 완료되었습니다.";
   }
-
 
   @Transactional(readOnly = true)
   @Override
@@ -51,6 +47,22 @@ public class PostServiceImpl implements PostService {
       allPostResponseDtoList.add(allPostResponseDto);
     }
     return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
+
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable) {
+    Page<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(category, pageable);
+
+    List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
+
+    for (Post post : posts) {
+      AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
+      allPostResponseDtoList.add(allPostResponseDto);
+    }
+    return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
+
   }
 
   @Transactional(readOnly = true)
