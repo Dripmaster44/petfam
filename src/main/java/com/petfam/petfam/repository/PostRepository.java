@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
   Page<Post> findByCategory(CategoryEnum category, Pageable pageable);
+
+  Page<Post> findByCategoryOrderByCreatedAtDesc(CategoryEnum category, Pageable pageable);
 }

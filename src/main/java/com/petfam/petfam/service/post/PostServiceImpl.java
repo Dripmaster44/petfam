@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
     return "게시글 작성이 완료되었습니다.";
   }
 
-//  @Transactional(readOnly = true)
+  //  @Transactional(readOnly = true)
 //  @Override
 //  public List<AllPostResponseDto> getAllPosts() {
 //    List<Post> posts = postRepository.findAll();
@@ -45,23 +45,23 @@ public class PostServiceImpl implements PostService {
 //    }
 //    return allPostResponseDtos;
 //  }
-@Transactional(readOnly = true)
-@Override
-public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
-  Page<Post> posts = postRepository.findAll(pageable);
-  List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
+  @Transactional(readOnly = true)
+  @Override
+  public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
+    Page<Post> posts = postRepository.findAll(pageable);
+    List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
 
-  for (Post post : posts) {
-    AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
-    allPostResponseDtoList.add(allPostResponseDto);
+    for (Post post : posts) {
+      AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
+      allPostResponseDtoList.add(allPostResponseDto);
+    }
+    return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
   }
-  return new PageImpl<>(allPostResponseDtoList,pageable,posts.getTotalElements());
-}
 
   @Transactional(readOnly = true)
   @Override
   public Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable) {
-    Page<Post> posts = postRepository.findByCategory(category, pageable);
+    Page<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(category, pageable);
 
     List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
 
@@ -101,7 +101,7 @@ public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
   @Override
   public String deletePost(Long postId, User user) {
     Post post = _findPost(postId);
-    
+
     if (user.getUserRole() != UserRoleEnum.ADMIN) {
       if (!post.getUser().getId().equals(user.getId())) {
         throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
