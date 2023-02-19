@@ -58,10 +58,11 @@ public class Post extends TimeStamped {
   }
 
   public void updatePost(PostUpdateRequestDto dto) {
-    this.title = dto.getTitle();
-    this.content = dto.getContent();
-    this.image = dto.getImage();
+    this.title = (dto.getTitle().equals("")) ? this.title : dto.getTitle();
+    this.content = (dto.getContent().equals("")) ? this.content : dto.getContent();
+    this.image = (dto.getImage().equals("")) ? this.image : dto.getImage();
   }
+
 
   public void updateLike(boolean islike) {
     likes += islike ? 1 : -1;
