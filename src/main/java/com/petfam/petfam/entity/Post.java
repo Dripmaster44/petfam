@@ -65,7 +65,6 @@ public class Post extends TimeStamped {
     this.category = dto.getCategory().equals(this.category) ? this.category : dto.getCategory();
   }
 
-
   public void updateLike(boolean islike) {
     likes += islike ? 1 : -1;
     if (likes < 0) {
