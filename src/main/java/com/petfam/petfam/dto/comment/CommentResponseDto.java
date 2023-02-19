@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class CommentResponseDto {
 
+  private Long id;
   private String writer;
   private String content;
 
@@ -16,6 +17,7 @@ public class CommentResponseDto {
   private List<ReCommentResponseDto> reComments;
 
   public CommentResponseDto(Comment comment) {
+    this.id = comment.getId();
     this.writer = comment.getUser().getNickname();
     this.content = comment.getContent();
     this.likes = comment.getLikes();

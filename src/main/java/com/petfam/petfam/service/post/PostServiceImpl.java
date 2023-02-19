@@ -36,17 +36,6 @@ public class PostServiceImpl implements PostService {
     return "게시글 작성이 완료되었습니다.";
   }
 
-  //  @Transactional(readOnly = true)
-//  @Override
-//  public List<AllPostResponseDto> getAllPosts() {
-//    List<Post> posts = postRepository.findAll();
-//    List<AllPostResponseDto> allPostResponseDtos = new ArrayList<>();
-//
-//    for (Post post : posts) {
-//      allPostResponseDtos.add(new AllPostResponseDto(post));
-//    }
-//    return allPostResponseDtos;
-//  }
   @Transactional(readOnly = true)
   @Override
   public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
@@ -58,6 +47,7 @@ public class PostServiceImpl implements PostService {
       allPostResponseDtoList.add(allPostResponseDto);
     }
     return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
+
   }
 
   @Transactional(readOnly = true)
@@ -72,6 +62,7 @@ public class PostServiceImpl implements PostService {
       allPostResponseDtoList.add(allPostResponseDto);
     }
     return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
+
   }
 
   @Transactional(readOnly = true)
