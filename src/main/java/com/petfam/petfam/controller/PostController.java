@@ -5,6 +5,8 @@ import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.entity.enums.CategoryEnum;
+import com.petfam.petfam.entity.Post;
+import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
 
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
   private final PostServiceImpl postService;
+  private final PostRepository postRepository;
 
   // 게시글 작성
   @PostMapping("")
@@ -70,6 +74,11 @@ public class PostController {
   public String deletePost(@PathVariable Long id,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.deletePost(id, userDetails.getUser());
+  }
+
+  @GetMapping("/topThree")
+  public List<PostResponseDto> getTopThreePosts(){
+    return postService.getTopThreePosts();
   }
 
 }
