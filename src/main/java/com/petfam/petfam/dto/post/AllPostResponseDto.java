@@ -1,6 +1,7 @@
 package com.petfam.petfam.dto.post;
 
 import com.petfam.petfam.entity.Post;
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import lombok.Getter;
 
 @Getter
@@ -11,6 +12,7 @@ public class AllPostResponseDto {
   private String title;
   private String image;
   private Integer likes;
+  private CategoryEnum category;
 
   public AllPostResponseDto(Post post) {
     this.id = post.getId();
@@ -18,6 +20,7 @@ public class AllPostResponseDto {
     this.image = post.getImage();
     this.writer = post.getUser().getNickname();
     this.likes = post.getLikes();
+    this.category = post.getCategory();
   }
 
 }

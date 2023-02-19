@@ -6,17 +6,15 @@ import lombok.Getter;
 @Getter
 public class UserResponseDto {
 
+  private Long id;
   private String username;
   private String nickname;
-  private String image;
-  private String introduction;
   private String role;
 
   public UserResponseDto(User user) {
+    this.id = user.getId();
     this.username = user.getUsername();
     this.nickname = user.getNickname();
-    this.image = user.getImage();
-    this.introduction = user.getIntroduction();
     this.role = user.getUserRole().getAuthority();
   }
 }
