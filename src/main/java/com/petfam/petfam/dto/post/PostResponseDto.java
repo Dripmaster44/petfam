@@ -1,5 +1,6 @@
 package com.petfam.petfam.dto.post;
 
+import com.petfam.petfam.dto.CategoryDto;
 import com.petfam.petfam.dto.comment.CommentResponseDto;
 import com.petfam.petfam.entity.Post;
 import java.util.List;
@@ -16,6 +17,7 @@ public class PostResponseDto {
   private Long writerId;
   private Integer likes;
   private String content;
+  private CategoryDto category;
   private List<CommentResponseDto> comments; // 리스트
 
   public PostResponseDto(Post post) {
@@ -26,6 +28,7 @@ public class PostResponseDto {
     this.writer = post.getUser().getNickname();
     this.writerId = post.getUser().getId();
     this.likes = post.getLikes();
+    this.category = new CategoryDto(post.getCategory());
     this.comments = post.getComments().stream().map(CommentResponseDto::new)
         .collect(Collectors.toList());
   }
