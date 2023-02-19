@@ -4,12 +4,14 @@ import com.petfam.petfam.dto.post.AllPostResponseDto;
 import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -38,8 +41,15 @@ public class PostController {
 
   // 게시글 전체 목록 조회
   @GetMapping("")
-  public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
-    return postService.getAllPosts(pageable);
+  public Page<AllPostResponseDto> getPosts(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) CategoryEnum category) {
+    Pageable pageable = PageRequest.of(page, size);
+    if (category == null) {
+      return postService.getAllPosts(pageable);
+    } else {
+      return postService.getPostsByCategory(category, pageable);
+    }
   }
 
   // 선택 게시글 조회

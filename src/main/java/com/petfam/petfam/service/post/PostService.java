@@ -6,7 +6,7 @@ import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.User;
-import java.util.List;
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,9 @@ public interface PostService {
   //createPost
   String createPost(PostCreateRequestDto requestDto, User user);
 
-  // getAllPosts
-//  List<AllPostResponseDto> getAllPosts();
   Page<AllPostResponseDto> getAllPosts(Pageable pageable);
+
+  Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable);
 
   // getSelectPost
   PostResponseDto getSelectPost(Long postId);
