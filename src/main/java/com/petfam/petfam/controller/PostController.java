@@ -5,6 +5,8 @@ import com.petfam.petfam.dto.post.AllPostResponseDto;
 import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
+import com.petfam.petfam.entity.Post;
+import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
   private final PostServiceImpl postService;
+  private final PostRepository postRepository;
 
   private final CommentServiceImpl commentService;
 
@@ -66,6 +70,7 @@ public class PostController {
     return postService.deletePost(id, userDetails.getUser());
   }
 
+
   // 댓글 생성
   @PostMapping("/{postId}/comments")
   public ResponseEntity<String> Comment(@PathVariable Long postId,
@@ -73,6 +78,11 @@ public class PostController {
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(commentService.comment(postId, userDetails.getUser(), commentRequestDto));
+
+
+  @GetMapping("/topThree")
+  public List<PostResponseDto> getTopThreePosts(){
+    return postService.getTopThreePosts();
   }
 
 }

@@ -114,15 +114,27 @@ public class UserServiceImpl implements UserService {
     if (!passwordEncoder.matches(adminSigninRequestDto.getPassword(), admin.getPassword())) {
       throw new IllegalArgumentException("아이디와 비밀번호를 확인해주세요");
     }
+
+    if (admin.getUserRole() != UserRoleEnum.ADMIN) {
+      throw new IllegalArgumentException("관리자 계정이아닙니다.");
+    }
+
     if (admin.getUserRole() == UserRoleEnum.ADMIN) {
       if (!adminSigninRequestDto.getAdminKey().equals(ADMIN_TOKEN)) {
         throw new IllegalArgumentException("관리자 암호를 확인해주세요");
       }
     }
-    response.addHeader(JwtUtil.AUTHORIZATION_HEADER,
-        jwtUtil.createToken(admin.getUsername(), admin.getUserRole()));
-    response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,
-        jwtUtil.refreshToken(admin.getUsername(), admin.getUserRole()));
+
+    String accessToken = jwtUtil.createToken(admin.getUsername(),admin.getUserRole());
+    String refreshToken = jwtUtil.refreshToken(admin.getUsername(),admin.getUserRole());
+
+    RefreshToken refreshToken1 = new RefreshToken(admin.getUsername(),refreshToken.substring(8),jwtUtil.getRefreshTokenTime());
+    refreshTokenRedisRepository.save(refreshToken1);
+
+    response.addHeader(JwtUtil.AUTHORIZATION_HEADER,accessToken);
+    response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
+
+
     return "로그인완료";
   }
 
