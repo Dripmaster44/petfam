@@ -1,15 +1,28 @@
 package com.petfam.petfam.service.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.petfam.petfam.dto.user.AdminSigninRequestDto;
 import com.petfam.petfam.dto.user.AdminSignupRequestDto;
 import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
+import com.petfam.petfam.dto.user.SigninRequestDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
+import com.petfam.petfam.entity.RefreshToken;
+import com.petfam.petfam.entity.SignoutAccessToken;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.jwt.JwtUtil;
 import com.petfam.petfam.repository.RefreshTokenRedisRepository;
 import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import com.petfam.petfam.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +31,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class UserServiceImplTest {
 
@@ -59,7 +70,6 @@ class UserServiceImplTest {
   void adminSignup() {
     //giver
     AdminSignupRequestDto requestDto = new AdminSignupRequestDto("admin","123","admin","AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC");
-    String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     //when
     String result = userService.adminSignup(requestDto);
     //then
@@ -69,21 +79,66 @@ class UserServiceImplTest {
   @Test
   @DisplayName("유저로그인")
   void signin() {
-    //giver
+    // giver
+    SigninRequestDto signinRequestDto = new SigninRequestDto("user", "password");
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    User user = new User("user", passwordEncoder.encode("password"), "nickname", "image", UserRoleEnum.USER);
+    when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
+    when(passwordEncoder.matches("password", user.getPassword())).thenReturn(true);
+    when(jwtUtil.createToken("user", UserRoleEnum.USER)).thenReturn("accessToken");
+    when(jwtUtil.refreshToken("user", UserRoleEnum.USER)).thenReturn("refreshToken");
 
-    //when
+    // when
+    String result = userService.signin(signinRequestDto, response);
 
-    //then
+    // then
+    assertEquals("로그인완료", result);
+    verify(response).addHeader(JwtUtil.AUTHORIZATION_HEADER, "accessToken");
+    verify(response).addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER, "refreshToken");
+    verify(refreshTokenRedisRepository).save(any(RefreshToken.class));
   }
 
-  @Test
+
+@Test
   @DisplayName("관리자로그인")
   void adminSignin() {
+    //giver
+    AdminSigninRequestDto requestDto = new AdminSigninRequestDto("admin","123","AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC");
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    User user = new User("admin",passwordEncoder.encode("123"),"admin","image",UserRoleEnum.ADMIN);
+    when(userRepository.findByUsername("admin")).thenReturn(Optional.of(user));
+    when(passwordEncoder.matches("123",user.getPassword())).thenReturn(true);
+    when(jwtUtil.createToken("admin",UserRoleEnum.ADMIN)).thenReturn("accessToken");
+    when(jwtUtil.refreshToken("admin",UserRoleEnum.ADMIN)).thenReturn("refreshToken");
+
+    //when
+    String result = userService.AdminSignin(requestDto,response);
+
+    //then
+    assertEquals("로그인완료", result);
+    verify(response).addHeader(JwtUtil.AUTHORIZATION_HEADER, "accessToken");
+    verify(response).addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER, "refreshToken");
+    verify(refreshTokenRedisRepository).save(any(RefreshToken.class));
   }
 
   @Test
   @DisplayName("로그아웃")
   void signout() {
+    //giver
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    String accessToken = "accessToken";
+    String username = "user";
+    Long time = 1L;
+    when(jwtUtil.resolveToken(request)).thenReturn(accessToken);
+    when(jwtUtil.getRemainMilliSeconds(any(String.class))).thenReturn(time);
+
+    //when
+    String result = userService.signout(request,username);
+
+    //then
+    assertEquals("success",result);
+    verify(refreshTokenRedisRepository).deleteById(username);
+    verify(signoutAccessTokenRedisRepository).save(any(SignoutAccessToken.class));
   }
 
   @Test
@@ -119,5 +174,23 @@ class UserServiceImplTest {
   @Test
   @DisplayName("리프레시")
   void refresh() {
+    //giver
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    String refreshToken = "refreshToken";
+    User user = new User("user","123","kap","image",UserRoleEnum.USER);
+    Claims refreshinfo = mock(Claims.class);
+    when(jwtUtil.resolveRefreshToken(request)).thenReturn(refreshToken);
+    when(jwtUtil.getUserInfoFromToken(refreshToken)).thenReturn(refreshinfo);
+    when(refreshinfo.getSubject()).thenReturn(user.getUsername());
+    when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+    when(jwtUtil.createToken(user.getUsername(),user.getUserRole())).thenReturn("accessToken");
+
+    //when
+    String result = userService.refresh(request,response);
+
+    //then
+    assertEquals("success",result);
+    verify(response).addHeader(JwtUtil.AUTHORIZATION_HEADER,"accessToken");
   }
 }

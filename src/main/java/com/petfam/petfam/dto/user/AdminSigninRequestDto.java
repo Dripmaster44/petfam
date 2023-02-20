@@ -11,4 +11,9 @@ public class AdminSigninRequestDto {
 
   private String adminKey;
 
+  public AdminSigninRequestDto(String username, String password, String adminKey) {
+    this.username = username;
+    this.password = password;
+    this.adminKey = adminKey;
+  }
 }

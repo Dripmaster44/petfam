@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
     signoutAccessTokenRedisRepository.save(SignoutAccessToken.of(accessToken,username, remainMilliSeconds));
 
     return "success";
-  } //추후 구현
+  }
 
 
   // 프로필 업데이트
