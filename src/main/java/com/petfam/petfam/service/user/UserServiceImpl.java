@@ -187,26 +187,26 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  private void _ck_username(String username) {
+  public void _ck_username(String username) {
     if (userRepository.findByUsername(username).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 유저입니다.");
     }
   }
 
-  private void _ck_nickname(String nickname) {
+  public void _ck_nickname(String nickname) {
     if (userRepository.findByNickname(nickname).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
     }
   }
 
-  private User _findUser(String username) {
+  public User _findUser(String username) {
     User user = userRepository.findByUsername(username).orElseThrow(
         () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
     );
     return user;
   }
 
-  private User _findUser(Long userId) {
+  public User _findUser(Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
         () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
     );

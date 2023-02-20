@@ -109,4 +109,8 @@ public class User {
     this.introduction = profileUpdateDto.getIntroduction();
     this.image = profileUpdateDto.getImage();
   }
+
+  public void setId(long l) {
+    this.id = l;
+  }
 }
