@@ -17,4 +17,11 @@ public class UserResponseDto {
     this.nickname = user.getNickname();
     this.role = user.getUserRole().getAuthority();
   }
+
+  public UserResponseDto(Long id, String username, String nickname, String role) {
+    this.id = id;
+    this.username = username;
+    this.nickname = nickname;
+    this.role = role;
+  }
 }
