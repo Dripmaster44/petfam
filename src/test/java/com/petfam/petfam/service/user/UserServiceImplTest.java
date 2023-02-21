@@ -1,6 +1,7 @@
 package com.petfam.petfam.service.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -60,10 +61,21 @@ class UserServiceImplTest {
   void userSignup() {
     //giver
     UserSignupRequestDto requestDto = new UserSignupRequestDto("user","123","kap");
+    when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("password");
+    when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.empty());
+    when(userRepository.findByNickname(requestDto.getNickname())).thenReturn(Optional.empty());
+
     //when
     String result = userService.userSignup(requestDto);
+
     //then
     assertEquals("회원가입완료",result);
+    verify(userRepository).save(argThat(user -> {
+      return user.getUsername().equals("user") &&
+          user.getPassword().equals("password") &&
+          user.getNickname().equals("kap") &&
+          user.getUserRole().equals(UserRoleEnum.USER);
+    }));
   }
 
   @Test
@@ -71,10 +83,20 @@ class UserServiceImplTest {
   void adminSignup() {
     //giver
     AdminSignupRequestDto requestDto = new AdminSignupRequestDto("admin","123","admin","AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC");
+    when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("password");
+    when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.empty());
+    when(userRepository.findByNickname(requestDto.getNickname())).thenReturn(Optional.empty());
+
     //when
     String result = userService.adminSignup(requestDto);
     //then
     assertEquals("관리자 회원가입완료",result);
+    verify(userRepository).save(argThat(user -> {
+      return user.getUsername().equals("admin") &&
+            user.getPassword().equals("password") &&
+            user.getNickname().equals("admin") &&
+            user.getUserRole().equals(UserRoleEnum.ADMIN);
+    }));
   }
 
   @Test
@@ -88,6 +110,7 @@ class UserServiceImplTest {
     when(passwordEncoder.matches("password", user.getPassword())).thenReturn(true);
     when(jwtUtil.createToken("user", UserRoleEnum.USER)).thenReturn("accessToken");
     when(jwtUtil.refreshToken("user", UserRoleEnum.USER)).thenReturn("refreshToken");
+    when(jwtUtil.getRefreshTokenTime()).thenReturn(1000L);
 
     // when
     String result = userService.signin(signinRequestDto, response);
@@ -96,7 +119,11 @@ class UserServiceImplTest {
     assertEquals("로그인완료", result);
     verify(response).addHeader(JwtUtil.AUTHORIZATION_HEADER, "accessToken");
     verify(response).addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER, "refreshToken");
-    verify(refreshTokenRedisRepository).save(any(RefreshToken.class));
+    verify(refreshTokenRedisRepository).save(argThat(refreshToken1 -> {
+      return refreshToken1.getRefreshToken().equals("oken") &&
+          refreshToken1.getId().equals("user") &&
+          refreshToken1.getExpiration().equals(1000L);
+    }));
   }
 
 
@@ -111,6 +138,7 @@ class UserServiceImplTest {
     when(passwordEncoder.matches("123",user.getPassword())).thenReturn(true);
     when(jwtUtil.createToken("admin",UserRoleEnum.ADMIN)).thenReturn("accessToken");
     when(jwtUtil.refreshToken("admin",UserRoleEnum.ADMIN)).thenReturn("refreshToken");
+    when(jwtUtil.getRefreshTokenTime()).thenReturn(1000L);
 
     //when
     String result = userService.AdminSignin(requestDto,response);
@@ -119,7 +147,11 @@ class UserServiceImplTest {
     assertEquals("로그인완료", result);
     verify(response).addHeader(JwtUtil.AUTHORIZATION_HEADER, "accessToken");
     verify(response).addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER, "refreshToken");
-    verify(refreshTokenRedisRepository).save(any(RefreshToken.class));
+  verify(refreshTokenRedisRepository).save(argThat(refreshToken1 -> {
+    return refreshToken1.getRefreshToken().equals("oken") &&
+        refreshToken1.getId().equals("admin") &&
+        refreshToken1.getExpiration().equals(1000L);
+  }));
   }
 
   @Test
@@ -148,10 +180,17 @@ class UserServiceImplTest {
     //giver
     ProfileUpdateDto request = new ProfileUpdateDto("kap11","안녕하세요","image11");
     User user = new User("user","123","kap","image", UserRoleEnum.USER);
+
     //when
     String result = userService.updateProfile(request,user);
+
     //then
     assertEquals("success",result);
+    verify(userRepository).save(argThat(user1 -> {
+      return user1.getNickname().equals("kap11") &&
+          user1.getIntroduction().equals("안녕하세요") &&
+          user1.getImage().equals("image11");
+    }));
   }
 
   @Test
@@ -181,6 +220,7 @@ class UserServiceImplTest {
     String refreshToken = "refreshToken";
     User user = new User("user","123","kap","image",UserRoleEnum.USER);
     Claims refreshinfo = mock(Claims.class);
+
     when(jwtUtil.resolveRefreshToken(request)).thenReturn(refreshToken);
     when(jwtUtil.getUserInfoFromToken(refreshToken)).thenReturn(refreshinfo);
     when(refreshinfo.getSubject()).thenReturn(user.getUsername());
