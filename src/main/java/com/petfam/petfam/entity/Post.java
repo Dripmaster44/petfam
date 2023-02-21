@@ -55,12 +55,14 @@ public class Post extends TimeStamped {
     this.image = requestDto.getImage();
     this.user = user;
     this.likes = 0;
+    this.category = requestDto.getCategory();
   }
 
   public void updatePost(PostUpdateRequestDto dto) {
-    this.title = dto.getTitle();
-    this.content = dto.getContent();
-    this.image = dto.getImage();
+    this.title = (dto.getTitle().equals("")) ? this.title : dto.getTitle();
+    this.content = (dto.getContent().equals("")) ? this.content : dto.getContent();
+    this.image = (dto.getImage().equals("")) ? this.image : dto.getImage();
+    this.category = dto.getCategory().equals(this.category) ? this.category : dto.getCategory();
   }
 
   public void updateLike(boolean islike) {
@@ -68,9 +70,5 @@ public class Post extends TimeStamped {
     if (likes < 0) {
       likes = 0;
     }
-  }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
   }
 }

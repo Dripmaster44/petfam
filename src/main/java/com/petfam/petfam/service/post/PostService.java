@@ -6,7 +6,10 @@ import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.CategoryEnum;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +18,9 @@ public interface PostService {
   //createPost
   String createPost(PostCreateRequestDto requestDto, User user);
 
-  // getAllPosts
-  List<AllPostResponseDto> getAllPosts();
+  Page<AllPostResponseDto> getAllPosts(Pageable pageable);
+
+  Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable);
 
   // getSelectPost
   PostResponseDto getSelectPost(Long postId);
@@ -27,4 +31,6 @@ public interface PostService {
 
   // deletePost
   String deletePost(Long postId, User user);
+
+  List<PostResponseDto> getTopThreePosts();
 }

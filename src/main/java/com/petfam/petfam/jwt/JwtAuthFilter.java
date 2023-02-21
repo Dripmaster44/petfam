@@ -6,6 +6,8 @@ package com.petfam.petfam.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petfam.petfam.dto.SecurityExceptionDto;
 
+import com.petfam.petfam.repository.RefreshTokenRedisRepository;
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,25 +29,38 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
+  private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
     String accessToken = jwtUtil.resolveToken(request);
+    String refreshToken = jwtUtil.resolveRefreshToken(request);
 
     if(accessToken != null) {
-      if(!jwtUtil.validateToken(accessToken)) {
-        jwtExceptionHandler(response,"Token Error", 400);
+      checkLogout(accessToken);
+      if (!jwtUtil.validateToken(accessToken)) {
+        jwtExceptionHandler(response, "Token Error", 400);
         return;
       }
       Claims info = jwtUtil.getUserInfoFromToken(accessToken);
       setAuthentication(info.getSubject());
     }
 
+    if(refreshToken != null) {
+      checkRedis(refreshToken);
+      if(!jwtUtil.validateToken(refreshToken)) {
+        jwtExceptionHandler(response,"Token Error", 400);
+        return;
+      }
+      Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
+      setAuthentication(info.getSubject());
+    }
+
     filterChain.doFilter(request, response);
   }
-
 
 
   public void setAuthentication(String username) {
@@ -68,7 +83,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
   }
 
+  private void checkLogout(String accessToken) {
+    if (signoutAccessTokenRedisRepository.existsById(accessToken)) {
+      throw new IllegalArgumentException("이미 로그아웃된 회원입니다.");
+    }
+  }
 
+  private void checkRedis(String refreshToken) {
+    if(refreshTokenRedisRepository.findById(jwtUtil.getUserInfoFromToken(refreshToken).getSubject()).isEmpty()) {
+      throw new IllegalArgumentException("이미 로그아웃된 회원입니다.");
+    }
+  }
 
 
 

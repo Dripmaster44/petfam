@@ -61,8 +61,4 @@ public class Comment {
     this.content = content;
   }
 
-  public void setReComment(List<ReComment> reComment) {
-    this.reComment = reComment;
-  }
-
 }

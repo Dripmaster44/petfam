@@ -6,14 +6,16 @@ import lombok.Getter;
 @Getter
 public class ReCommentResponseDto {
 
+  private Long id;
   private String writer;
-  private String conetent;
+  private String content;
 
   private Integer likes;
 
   public ReCommentResponseDto(ReComment recomment) {
+    this.id = recomment.getId();
     this.writer = recomment.getUser().getNickname();
-    this.conetent = recomment.getContent();
+    this.content = recomment.getContent();
     this.likes = recomment.getLikes();
   }
 }

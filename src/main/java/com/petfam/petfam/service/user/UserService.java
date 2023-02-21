@@ -1,6 +1,7 @@
 package com.petfam.petfam.service.user;
 
 
+import com.petfam.petfam.dto.user.AdminSigninRequestDto;
 import com.petfam.petfam.dto.user.AdminSignupRequestDto;
 import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
@@ -11,11 +12,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
+
   public String userSignup(UserSignupRequestDto usersignupRequestDto);
+
   public String adminSignup(AdminSignupRequestDto adminsignupRequestDto);
+
   public String signin(SigninRequestDto signinRequestDto, HttpServletResponse response);
-  public String signout(HttpServletRequest request);
+
+  public String signout(HttpServletRequest request,String username);
+
+  String AdminSignin(AdminSigninRequestDto adminSigninRequestDto, HttpServletResponse response);
+
   public String updateProfile(ProfileUpdateDto profileUpdateDto, User user);
+
   public ProfileResponseDto getProfile(Long userId);
-  public String refresh(HttpServletRequest request,HttpServletResponse response);
+
+  public String refresh(HttpServletRequest request, HttpServletResponse response);
 }

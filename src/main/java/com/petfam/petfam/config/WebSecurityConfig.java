@@ -1,12 +1,19 @@
 package com.petfam.petfam.config;
 
 
-import com.petfam.petfam.jwt.JwtUtil;
+import static com.petfam.petfam.jwt.JwtUtil.AUTHORIZATION_HEADER;
+import static com.petfam.petfam.jwt.JwtUtil.REFRESH_AUTHORIZATION_HEADER;
+
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.repository.RefreshTokenRedisRepository;
+import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
+import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,46 +24,73 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableWebMvc
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
 
 
-    private final JwtUtil jwtUtil;
+  private final JwtUtil jwtUtil;
+  private final SignoutAccessTokenRedisRepository signoutAccessTokenRedisRepository;
+  private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();}
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-                .requestMatchers("/users/signin").permitAll()
-                .requestMatchers("/users/admin/signup").permitAll()
-                .requestMatchers("/users/refresh").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/posts").permitAll()
-                .anyRequest().authenticated()
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-        http.formLogin().disable();
 
 
-        return http.build();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return (web) -> web.ignoring()
+        .requestMatchers(PathRequest.toH2Console())
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+  }
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.cors().and().csrf().disable();
+
+
+    http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
+            .requestMatchers("/users/signin").permitAll()
+            .requestMatchers("/users/admin/signup").permitAll()
+            .requestMatchers("/users/admin/signin").permitAll()
+            .requestMatchers("/users/refresh").permitAll()
+            .requestMatchers("/users/login-page").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+                
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.formLogin().disable();
+
+    return http.build();
+  }
+
+  @Override
+  public void addCorsMappings(CorsRegistry corsRegistry) {
+    corsRegistry.addMapping("/**")
+        .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/")
+        .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
+        .exposedHeaders(AUTHORIZATION_HEADER,REFRESH_AUTHORIZATION_HEADER)
+        .allowCredentials(true)
+        .maxAge(3600);
+  }
+
+
 }

@@ -2,29 +2,26 @@ package com.petfam.petfam.dto.comment;
 
 import com.petfam.petfam.dto.recomment.ReCommentResponseDto;
 import com.petfam.petfam.entity.Comment;
-import com.petfam.petfam.entity.ReComment;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
 public class CommentResponseDto {
 
+  private Long id;
   private String writer;
   private String content;
 
   private Integer likes;
-  private List<ReCommentResponseDto> reComments = new ArrayList<>();
+  private List<ReCommentResponseDto> reComments;
 
   public CommentResponseDto(Comment comment) {
+    this.id = comment.getId();
     this.writer = comment.getUser().getNickname();
     this.content = comment.getContent();
     this.likes = comment.getLikes();
-
-    List<ReComment> recomments = comment.getReComment();
-    for (ReComment reComment : recomments) {
-      this.reComments.add(new ReCommentResponseDto(reComment));
-    }
+    this.reComments = comment.getReComment().stream().map(ReCommentResponseDto::new)
+        .collect(Collectors.toList());
   }
-
 }
