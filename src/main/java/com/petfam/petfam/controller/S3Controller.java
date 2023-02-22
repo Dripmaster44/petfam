@@ -9,8 +9,9 @@ import java.net.URL;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,12 +27,18 @@ public class S3Controller {
   private String bucketName;
 
   @PostMapping("/upload")
-  public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+  public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setContentType(file.getContentType());
     metadata.setContentLength(file.getSize());
     amazonS3.putObject(bucketName, file.getOriginalFilename(), file.getInputStream(), metadata);
-    return "File uploaded successfully";
+    Date expiration = new Date(System.currentTimeMillis() + 3600000); // URL expiration time (1 hour from now)
+    GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, file.getOriginalFilename())
+        .withMethod(HttpMethod.GET)
+        .withExpiration(expiration);
+    URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(url.toString());
   }
 
   @DeleteMapping("/delete/{fileName:.+}")
@@ -40,15 +47,6 @@ public class S3Controller {
     return "File deleted successfully";
   }
 
-  @GetMapping("/image/{fileName:.+}")
-  public String getImageUrl(@PathVariable String fileName) {
-    Date expiration = new Date(System.currentTimeMillis() + 3600000); // URL expiration time (1 hour from now)
-    GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName)
-        .withMethod(HttpMethod.GET)
-        .withExpiration(expiration);
-    URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-    return url.toString();
-  }
 
 
 }
