@@ -38,19 +38,6 @@ public class PostServiceImpl implements PostService {
 
   @Transactional(readOnly = true)
   @Override
-  public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
-    Page<Post> posts = postRepository.findAll(pageable);
-    List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
-
-    for (Post post : posts) {
-      AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
-      allPostResponseDtoList.add(allPostResponseDto);
-    }
-    return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
-
-  }
-
-  @Override
   public Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable) {
     Page<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(category, pageable);
 
@@ -61,7 +48,6 @@ public class PostServiceImpl implements PostService {
       allPostResponseDtoList.add(allPostResponseDto);
     }
     return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
-
   }
 
   @Transactional(readOnly = true)
