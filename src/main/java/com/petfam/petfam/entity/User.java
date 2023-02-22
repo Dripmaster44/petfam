@@ -98,15 +98,12 @@ public class User {
     return this.userRole == UserRoleEnum.ADMIN;
   }
 
-  // 닉네임 업데이트
-  public void updateNickname(String nickname) {
-    this.nickname = nickname;
-  }
 
   // 프로필 업데이트
   public void updateProfile(ProfileUpdateDto profileUpdateDto) {
-    this.nickname = profileUpdateDto.getNickname();
-    this.introduction = profileUpdateDto.getIntroduction();
-    this.image = profileUpdateDto.getImage();
+    this.nickname = (profileUpdateDto.getNickname().equals("")) ? this.nickname : profileUpdateDto.getNickname();
+    this.introduction = (profileUpdateDto.getIntroduction().equals("")) ? this.introduction : profileUpdateDto.getIntroduction();
+    this.image = (profileUpdateDto.getImage().equals("")) ? this.image : profileUpdateDto.getImage();
   }
+
 }
