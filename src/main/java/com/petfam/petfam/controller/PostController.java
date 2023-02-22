@@ -6,8 +6,6 @@ import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.entity.enums.CategoryEnum;
-import com.petfam.petfam.entity.Post;
-import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -52,11 +49,7 @@ public class PostController {
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(required = false) CategoryEnum category) {
     Pageable pageable = PageRequest.of(page, size);
-    if (category == null) {
-      return postService.getAllPosts(pageable);
-    } else {
-      return postService.getPostsByCategory(category, pageable);
-    }
+    return postService.getPostsByCategory(category, pageable);
   }
 
   // 선택 게시글 조회

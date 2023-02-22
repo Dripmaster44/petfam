@@ -18,8 +18,6 @@ public interface PostService {
   //createPost
   String createPost(PostCreateRequestDto requestDto, User user);
 
-  Page<AllPostResponseDto> getAllPosts(Pageable pageable);
-
   Page<AllPostResponseDto> getPostsByCategory(CategoryEnum category, Pageable pageable);
 
   // getSelectPost
@@ -27,7 +25,6 @@ public interface PostService {
 
   // updatePost
   PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto, User user);
-
 
   // deletePost
   String deletePost(Long postId, User user);
