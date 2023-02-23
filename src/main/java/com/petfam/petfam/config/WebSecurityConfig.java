@@ -66,6 +66,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             .requestMatchers("/users/login-page").permitAll()
             .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
             .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+            .requestMatchers("/websocket/**").permitAll()
+            .requestMatchers("/chat/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
