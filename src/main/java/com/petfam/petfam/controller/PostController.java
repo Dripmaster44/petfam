@@ -42,6 +42,21 @@ public class PostController {
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.createPost(postCreateRequestDto, userDetails.getUser());
   }
+  //카테고리 미적용
+  @GetMapping("/all")
+  public Page<AllPostResponseDto> getAllPosts(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(required = false) Integer size,
+      @RequestParam(required = false) CategoryEnum category) {
+    Pageable pageable;
+    if (size != null) {
+      pageable = PageRequest.of(page, size);
+    } else {
+      pageable = Pageable.unpaged();
+    }
+    return postService.getPostsByCategory(category, pageable);
+  }
+
 
   // 게시글 전체 목록 조회
   @GetMapping("")
@@ -80,10 +95,4 @@ public class PostController {
     return ResponseEntity.status(HttpStatus.OK)
         .body(commentService.comment(postId, userDetails.getUser(), commentRequestDto));
   }
-
-  @GetMapping("/topThree")
-  public List<PostResponseDto> getTopThreePosts() {
-    return postService.getTopThreePosts();
-  }
-
 }
