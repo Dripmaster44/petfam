@@ -33,7 +33,7 @@ public class S3Controller {
     metadata.setContentType(file.getContentType());
     metadata.setContentLength(file.getSize());
     amazonS3.putObject(bucketName, file.getOriginalFilename(), file.getInputStream(), metadata);
-    Date expiration = new Date(System.currentTimeMillis() + 3600000); // URL expiration time (1 hour from now)
+    Date expiration = new Date(System.currentTimeMillis() +  518400000L); // URL expiration time (1 month from now)
     GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, file.getOriginalFilename())
         .withMethod(HttpMethod.GET)
         .withExpiration(expiration);
