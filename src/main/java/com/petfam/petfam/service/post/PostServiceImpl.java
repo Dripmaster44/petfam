@@ -10,6 +10,7 @@ import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.CategoryEnum;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.repository.PostRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +36,20 @@ public class PostServiceImpl implements PostService {
     postRepository.save(post);
     return "게시글 작성이 완료되었습니다.";
   }
+
+//  @Transactional(readOnly = true)
+//  @Override
+//  public Page<AllPostResponseDto> getAllPosts(Pageable pageable) {
+//    Page<Post> posts = postRepository.findAll(pageable);
+//    List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
+//
+//    for (Post post : posts) {
+//      AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
+//      allPostResponseDtoList.add(allPostResponseDto);
+//    }
+//    return new PageImpl<>(allPostResponseDtoList,pageable,posts.getTotalElements());
+//  }
+
 
   @Transactional(readOnly = true)
   @Override
@@ -89,26 +104,6 @@ public class PostServiceImpl implements PostService {
     postRepository.deleteById(postId);
     return "게시글이 삭제되었습니다.";
   }
-
-  //좋아요 상위3개 출력
-  @Override
-  public List<PostResponseDto> getTopThreePosts() {
-    List<Post> allPosts = postRepository.findAll();
-    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-
-    for (Post post : allPosts) {
-      PostResponseDto postResponseDto = new PostResponseDto(post);
-      postResponseDtoList.add(postResponseDto);
-    }
-    Collections.sort(postResponseDtoList, new Comparator<PostResponseDto>() {
-      @Override
-      public int compare(PostResponseDto post1, PostResponseDto post2) {
-        return post2.getLikes() - post1.getLikes();
-      }
-    });
-    return postResponseDtoList.subList(0, Math.min(3, postResponseDtoList.size()));
-  }
-
 
   // 중복 코드
   private Post _findPost(Long postId) {

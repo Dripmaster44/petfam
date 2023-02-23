@@ -29,5 +29,5 @@ public interface PostService {
   // deletePost
   String deletePost(Long postId, User user);
 
-  List<PostResponseDto> getTopThreePosts();
 }
+
