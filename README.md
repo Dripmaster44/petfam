@@ -10,39 +10,43 @@
 
 <summary> 프로젝트 프리뷰 </summary>
 <figure>
-  <img src="readme_asset/01.png" alt="메인" style="width: auto"/>
+  <img src="readme_asset/01.png" alt="메인" width="auto"/>
   <figcaption style="text-align: center">메인 페이지</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/02.png" alt="전체 게시글 리스트(카테고리별)"/>
+  <img src="readme_asset/02.png" alt="전체 게시글 리스트(카테고리별)" width="auto"/>
   <figcaption style="text-align:center">전체 게시글 리스트(카테고리별)</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/03.png" alt="상세 게시글(본문)"/>
+  <img src="readme_asset/03.png" alt="상세 게시글(본문)" width="auto"/>
   <figcaption style="text-align: center">상세 게시글(본문)</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/04.png" alt="상세 게시글(댓글)"/>
+  <img src="readme_asset/04.png" alt="상세 게시글(댓글)" width="auto"/>
   <figcaption style="text-align: center">상세 게시글(댓글)</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/05.png" alt="글 작성 페이지"/>
+  <img src="readme_asset/05.png" alt="글 작성 페이지" width="auto"/>
   <figcaption style="text-align: center">글 작성 페이지</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/06.png" alt="로그인"/>
+  <img src="readme_asset/06.png" alt="로그인" width="auto"/>
   <figcaption style="text-align: center">로그인</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/07.png" alt="메인 헤더(관리자용)"/>
+  <img src="readme_asset/10.png" alt="회원가입" width="auto"/>
+  <figcaption style="text-align: center">회원가입</figcaption>
+</figure>
+<figure>
+  <img src="readme_asset/07.png" alt="메인 헤더(관리자용)" width="auto"/>
   <figcaption style="text-align: center">메인 헤더(관리자용)</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/08.png" alt="전체유저 조회(관리자용)"/>
-  <figcaption style="text-align: center">상세 게시글(본문)</figcaption>
+  <img src="readme_asset/08.png" alt="전체유저 조회(관리자용)" width="auto"/>
+  <figcaption style="text-align: center">전체유저 조회(관리자용)</figcaption>
 </figure>
 <figure>
-  <img src="readme_asset/09.png" alt="유저 프로필 정보"/>
+  <img src="readme_asset/09.png" alt="유저 프로필 정보" width="auto"/>
   <figcaption style="text-align: center">유저 프로필 정보</figcaption>
 </figure>
 </details>
@@ -71,12 +75,14 @@
 
 ### *Tools*
 
+<div>
 <img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=plastic&logo=IntelliJ IDEA&logoColor=white"/>
 <img src="https://img.shields.io/badge/GitHub-181717?style=plastic&logo=GitHub&logoColor=white"/>
 <img src="https://img.shields.io/badge/VSCode-007ACC?style=plastic&logo=VisualStudioCode&logoColor=white"/>
 <img src="https://img.shields.io/badge/EC2-FF9900?style=plastic&logo=Amazon EC2&logoColor=white"/>
 <img src="https://img.shields.io/badge/S3-569A31?style=plastic&logo=Amazon S3&logoColor=white"/>
 <img src="https://img.shields.io/badge/CodeDeploy-232F3E?style=plastic&logo=Amazon AWS&logoColor=white"/>
+</div>
 
 ***
 
@@ -98,7 +104,11 @@
 
 ![ServiceArchitecture](https://user-images.githubusercontent.com/117059820/220859677-82fdf10e-2856-4684-ad13-41277a3bd82f.png)
 
-## 4. MVP 목표
+## 4. 시연 영상
+
+[유튜브 시연영상 링크](https://youtu.be/mbqhGZlpI0U)
+
+## 5. MVP 목표
 
 ### 로그인/ 회원가입
 
@@ -127,6 +137,7 @@
 
 - [ ] 해시태그기능(키워드) #냥스타그램🐱
 
+![footer](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=18&height=250&section=footer&text=Thank%20You!)
 
 
 
