@@ -39,8 +39,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
 
-
-
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -57,19 +55,20 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable();
 
-
     http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-            .requestMatchers("/users/signin").permitAll()
-            .requestMatchers("/users/admin/signup").permitAll()
-            .requestMatchers("/users/admin/signin").permitAll()
-            .requestMatchers("/users/refresh").permitAll()
-            .requestMatchers("/users/login-page").permitAll()
-            .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
-            .requestMatchers(HttpMethod.GET,"/posts").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
-                
+        .requestMatchers("/users/signin").permitAll()
+        .requestMatchers("/users/admin/signup").permitAll()
+        .requestMatchers("/users/admin/signin").permitAll()
+        .requestMatchers("/users/refresh").permitAll()
+        .requestMatchers("/users/login-page").permitAll()
+        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/posts").permitAll()
+        .requestMatchers(HttpMethod.POST, "/posts/views/**").permitAll()  // 조회수용 쿠키 생성을 위한 허용
+        .anyRequest().authenticated()
+        .and()
+        .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository,
+            refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.formLogin().disable();
@@ -82,7 +81,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     corsRegistry.addMapping("/**")
         .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/", "http://127.0.0.1:5501/")
         .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
-        .exposedHeaders(AUTHORIZATION_HEADER,REFRESH_AUTHORIZATION_HEADER)
+        .exposedHeaders(AUTHORIZATION_HEADER, REFRESH_AUTHORIZATION_HEADER)
         .allowCredentials(true)
         .maxAge(3600);
   }

@@ -47,6 +47,10 @@ public class Post extends TimeStamped {
 
   private CategoryEnum category;
 
+  // 조회수
+  @Column(columnDefinition = "integer default 0", nullable = false)
+  private int view;
+
 
   @Builder
   public Post(PostCreateRequestDto requestDto, User user) {

@@ -15,6 +15,7 @@ public class AllPostResponseDto {
   private Integer likes;
   private CategoryEnum category;
   private LocalDateTime createdAt;
+  private int view;
 
   public AllPostResponseDto(Post post) {
     this.id = post.getId();
@@ -24,6 +25,7 @@ public class AllPostResponseDto {
     this.likes = post.getLikes();
     this.category = post.getCategory();
     this.createdAt = post.getCreatedAt();
+    this.view = post.getView();
   }
 
 }

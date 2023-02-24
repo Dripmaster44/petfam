@@ -9,7 +9,8 @@ import com.petfam.petfam.entity.enums.CategoryEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,7 @@ public class PostController {
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.createPost(postCreateRequestDto, userDetails.getUser());
   }
+
   //카테고리 미적용
   @GetMapping("/all")
   public Page<AllPostResponseDto> getAllPosts(
@@ -94,5 +96,13 @@ public class PostController {
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(commentService.comment(postId, userDetails.getUser(), commentRequestDto));
+  }
+
+  // 조회수 중복 방지용 쿠키 발행
+  @PostMapping("/views/{id}")
+  public void updateView(@PathVariable long id,
+      HttpServletRequest request,
+      HttpServletResponse response) {
+    postService.updateView(id, request, response);
   }
 }
