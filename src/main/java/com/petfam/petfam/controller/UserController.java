@@ -5,7 +5,10 @@ import com.petfam.petfam.dto.user.AdminSignupRequestDto;
 import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
+import com.petfam.petfam.dto.user.UserNicknameDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
+import com.petfam.petfam.dto.user.UserUsernameDto;
+import com.petfam.petfam.repository.UserRepository;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.user.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
   private final UserServiceImpl userService;
+  private final UserRepository userRepository;
 
 
   @PostMapping("/signup")
@@ -88,6 +91,16 @@ public class UserController {
   @PostMapping("/refresh")
   public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) {
     return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request, response));
+  }
+
+  @PostMapping("/id")
+  public ResponseEntity<String> ck_id(@RequestBody UserUsernameDto userUsernameDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ck_username(userUsernameDto));
+  }
+
+  @PostMapping("/nickname")
+  public ResponseEntity<String> ck_nickname(@RequestBody UserNicknameDto userNicknameDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ck_nickname(userNicknameDto));
   }
 
 }
