@@ -20,18 +20,6 @@ public class AdminServiceImpl implements AdminService {
 
   private final UserRepository userRepository;
 
-//  @Override
-//  @Transactional(readOnly = true)
-//  public List<UserResponseDto> getUsers() {
-//
-//    List<User> users = userRepository.findAll();
-//    List<UserResponseDto> userResponseDtos = new ArrayList<>();
-//
-//    for (User user : users) {
-//      userResponseDtos.add(new UserResponseDto(user));
-//    }
-//    return userResponseDtos;
-//  }
 @Override
 @Transactional(readOnly = true)
 public Page<UserResponseDto> getUsers(Pageable pageable) {
