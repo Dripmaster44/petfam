@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 // lombok
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 //jpa
 @Entity(name = "users")
 public class User {
@@ -53,6 +52,8 @@ public class User {
   @Enumerated(value = EnumType.STRING)
   private UserRoleEnum userRole;
 
+  private Long kakaoId;
+
 
   /**
    * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
@@ -60,7 +61,6 @@ public class User {
 
   // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder
-
   public User(String username, String password, String nickname,
       String image, UserRoleEnum userRole) {
     this.username = username;
@@ -70,6 +70,17 @@ public class User {
     this.introduction = "안녕하세요.";
     this.point = 0;
     this.userRole = userRole;
+  }
+
+  public User(String username, Long kakaoId,String password ,String nickname) {
+    this.username = username;
+    this.password = password;
+    this.kakaoId = kakaoId;
+    this.nickname = nickname;
+    this.image = "src/main/java/resources/static/images/m_20220509173224_d9N4ZGtBVR.jpeg";
+    this.introduction = "안녕하세요.";
+    this.point = 0;
+    this.userRole = UserRoleEnum.USER;
   }
 
 
