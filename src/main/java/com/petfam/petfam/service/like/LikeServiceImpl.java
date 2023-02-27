@@ -106,7 +106,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     ReComment reComment = reCommentRepository.findById(reCommentId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
     reComment.updateLike(islike);
 
