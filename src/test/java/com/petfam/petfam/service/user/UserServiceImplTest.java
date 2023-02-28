@@ -13,7 +13,6 @@ import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
-import com.petfam.petfam.entity.RefreshToken;
 import com.petfam.petfam.entity.SignoutAccessToken;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.UserRoleEnum;
@@ -82,7 +81,7 @@ class UserServiceImplTest {
   @DisplayName("관리자회원가입")
   void adminSignup() {
     //giver
-    AdminSignupRequestDto requestDto = new AdminSignupRequestDto("admin","123","admin","AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC");
+    AdminSignupRequestDto requestDto = AdminSignupRequestDto.builder().username("admin").password("123").nickname("admin").adminKey("AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC").build();
     when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("password");
     when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByNickname(requestDto.getNickname())).thenReturn(Optional.empty());

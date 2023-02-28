@@ -110,6 +110,7 @@ public class UserController {
     // code: 카카오 서버로부터 받은 인가 코드
     kakaoService.kakaoLogin(code, response);
 
-    return "redirect:http://http://127.0.0.1:5501/index.html";
+    return "redirect:/index.html";
+
   }
 }

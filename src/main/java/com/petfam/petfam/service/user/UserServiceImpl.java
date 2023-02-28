@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     if (!passwordEncoder.matches(signinRequestDto.getPassword(), user.getPassword())) {
       throw new IllegalArgumentException("아이디와 비밀번호를 확인해주세요");
     }
-    
+
     String accessToken = jwtUtil.createToken(user.getUsername(),user.getUserRole());
     String refreshToken = jwtUtil.refreshToken(user.getUsername(),user.getUserRole());
 
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
     signoutAccessTokenRedisRepository.save(SignoutAccessToken.of(accessToken,username, remainMilliSeconds));
 
     return "success";
-  }
+  } //추후 구현
 
 
   // 프로필 업데이트
@@ -195,9 +195,6 @@ public class UserServiceImpl implements UserService {
     } else return "fail";
   }
 
-<<<<<<< HEAD
-  public void _ck_username(String username) {
-=======
   public String ck_nickname(UserNicknameDto userNicknameDto) {
     System.out.println(userNicknameDto.getNickname());
     if (userRepository.findByNickname(userNicknameDto.getNickname()).isEmpty()) {
@@ -205,26 +202,25 @@ public class UserServiceImpl implements UserService {
     } else return "fail";
   }
   private void _ck_username(String username) {
->>>>>>> refactor/#50
     if (userRepository.findByUsername(username).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 유저입니다.");
     }
   }
 
-  public void _ck_nickname(String nickname) {
+  private void _ck_nickname(String nickname) {
     if (userRepository.findByNickname(nickname).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
     }
   }
 
-  public User _findUser(String username) {
+  private User _findUser(String username) {
     User user = userRepository.findByUsername(username).orElseThrow(
         () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
     );
     return user;
   }
 
-  public User _findUser(Long userId) {
+  private User _findUser(Long userId) {
     User user = userRepository.findById(userId).orElseThrow(
         () -> new IllegalArgumentException("유저 정보가 존재하지 않습니다.")
     );

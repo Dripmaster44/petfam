@@ -117,10 +117,9 @@ public class User {
     this.image = (profileUpdateDto.getImage().equals("")) ? this.image : profileUpdateDto.getImage();
   }
 
-<<<<<<< HEAD
+
   public void setId(long l) {
     this.id = l;
   }
-=======
->>>>>>> refactor/#50
+
 }
