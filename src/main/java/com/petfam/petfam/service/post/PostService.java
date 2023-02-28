@@ -31,5 +31,5 @@ public interface PostService {
   String deletePost(Long postId, User user);
 
   // 조회수 증가
-  void updateView(Long id, HttpServletRequest request, HttpServletResponse response);
+  int updateView(Long id, HttpServletRequest request, HttpServletResponse response);
 }

@@ -66,8 +66,6 @@ public class PostServiceImpl implements PostService {
   public PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto requestDto, User user) {
     Post post = _findPost(postId);
 
-    // exception처리 후 살릴 부분
-    // admin과 글 작성자만 수정할 수 있는 기능
     if (user.getUserRole() != UserRoleEnum.ADMIN) {
       if (!post.getUser().getId().equals(user.getId())) {
         throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
@@ -86,7 +84,7 @@ public class PostServiceImpl implements PostService {
 
     if (user.getUserRole() != UserRoleEnum.ADMIN) {
       if (!post.getUser().getId().equals(user.getId())) {
-        throw new IllegalArgumentException("글 작성자만 수정이 가능합니다.");
+        throw new IllegalArgumentException("글 작성자만 삭제 가능합니다.");
       }
     }
 
@@ -105,7 +103,7 @@ public class PostServiceImpl implements PostService {
   // 조회수 증가
   @Transactional
   @Override
-  public void updateView(Long id, HttpServletRequest request, HttpServletResponse response) {
+  public int updateView(Long id, HttpServletRequest request, HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();  // 클라이언트가 보낸 데이터에서 쿠키 찾기
     boolean checkCookie = false; // 쿠키값 정의
     int result = 0; // 조회수 0
@@ -115,29 +113,25 @@ public class PostServiceImpl implements PostService {
           checkCookie = true;
         }
       }
-      if (!checkCookie) {  // 게시글의 쿠키가 없을 경우
-        Cookie newCookie = createCookieForNewView(id); // 새 쿠키 발급
-        response.addCookie(newCookie);  // 쿠키에 추가
-        result = postRepository.updateView(id);
-      }
     } else { // 쿠키가 없을 경우
-      Cookie newCookie = createCookieForNewView(id); // 새 쿠키 발급
+      Cookie newCookie = _createCookieForNewView(id); // 새 쿠키 발급
       response.addCookie(newCookie);
       result = postRepository.updateView(id);
     }
+    return result;
   }
 
   /**
    * 조회수 중복 방지를 위한 쿠키 생성 메소드
    */
-  private Cookie createCookieForNewView(Long postId) {
+  private Cookie _createCookieForNewView(Long postId) {
     Cookie cookie = new Cookie(VIEWCOOKIE + postId, String.valueOf(postId));
-    cookie.setMaxAge(getRemainTimeForTomorrow());
+    cookie.setMaxAge(_getRemainTimeForTomorrow());
     cookie.setHttpOnly(true); // 서버에서만 조작 가능
     return cookie;
   }
 
-  private int getRemainTimeForTomorrow() {
+  private int _getRemainTimeForTomorrow() {
     LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     LocalDateTime tomorrow = LocalDateTime.now().plusDays(1L).truncatedTo(ChronoUnit.DAYS);
     return (int) now.until(tomorrow, ChronoUnit.SECONDS);
