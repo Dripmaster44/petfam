@@ -1,8 +1,13 @@
 package com.petfam.petfam.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@JsonDeserialize(builder = AdminSigninRequestDto.AdminSigninRequestDtoBuilder.class)
 public class AdminSigninRequestDto {
 
   private String username;
@@ -11,9 +16,15 @@ public class AdminSigninRequestDto {
 
   private String adminKey;
 
-  public AdminSigninRequestDto(String username, String password, String adminKey) {
-    this.username = username;
-    this.password = password;
-    this.adminKey = adminKey;
+  public static class AdminSigninRequestDtoBuilder {
+    @JsonSetter("username")
+    private String username;
+    @JsonSetter("password")
+    private String password;
+    @JsonSetter("adminKey")
+    private String adminKey;
+    public AdminSigninRequestDto build() {
+      return new AdminSigninRequestDto(username,password,adminKey);
+    }
   }
 }

@@ -130,7 +130,7 @@ class UserServiceImplTest {
   @DisplayName("관리자로그인")
   void adminSignin() {
     //giver
-    AdminSigninRequestDto requestDto = new AdminSigninRequestDto("admin","123","AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC");
+    AdminSigninRequestDto requestDto = AdminSigninRequestDto.builder().username("admin").password("123").adminKey("AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC").build();
     HttpServletResponse response = mock(HttpServletResponse.class);
     User user = new User("admin",passwordEncoder.encode("123"),"admin","image",UserRoleEnum.ADMIN);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(user));
