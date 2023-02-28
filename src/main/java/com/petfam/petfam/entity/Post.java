@@ -45,6 +45,7 @@ public class Post extends TimeStamped {
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
+  //  @Enumerated(EnumType.STRING)  // 원래는 카테고리 명으로 받아와야 db에서도 카테고리의 종류를 알수 있으나, 현재 수정해야할점이 많아 보류
   private CategoryEnum category;
 
   // 조회수
