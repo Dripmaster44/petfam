@@ -63,7 +63,7 @@ public class PostController {
   // 게시글 전체 목록 조회
   @GetMapping("")
   public Page<AllPostResponseDto> getPosts(@RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "9") int size,
       @RequestParam(required = false) CategoryEnum category) {
     Pageable pageable = PageRequest.of(page, size);
     return postService.getPostsByCategory(category, pageable);
