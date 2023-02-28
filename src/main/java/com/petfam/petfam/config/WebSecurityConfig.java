@@ -5,15 +5,13 @@ import static com.petfam.petfam.jwt.JwtUtil.AUTHORIZATION_HEADER;
 import static com.petfam.petfam.jwt.JwtUtil.REFRESH_AUTHORIZATION_HEADER;
 
 import com.petfam.petfam.jwt.JwtAuthFilter;
+import com.petfam.petfam.jwt.JwtUtil;
 import com.petfam.petfam.repository.RefreshTokenRedisRepository;
 import com.petfam.petfam.repository.SignoutAccessTokenRedisRepository;
-import com.petfam.petfam.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,9 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -69,6 +64,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             .requestMatchers("/users/admin/signin").permitAll()
             .requestMatchers("/users/refresh").permitAll()
             .requestMatchers("/users/login-page").permitAll()
+            .requestMatchers("/users/id").permitAll()
+            .requestMatchers("/users/nickname").permitAll()
+            .requestMatchers("/users/kakao/callback").permitAll()
             .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
             .requestMatchers(HttpMethod.GET,"/posts").permitAll()
             .anyRequest().authenticated()
@@ -85,7 +83,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry corsRegistry) {
     corsRegistry.addMapping("/**")
-        .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/")
+        .allowedOrigins("http://localhost:8080", "http://127.0.0.1:5500/", "http://127.0.0.1:5501/")
         .allowedMethods("GET", "POST", "PATCH", "DELETE", "OPTIONS", "HEAD")
         .exposedHeaders(AUTHORIZATION_HEADER,REFRESH_AUTHORIZATION_HEADER)
         .allowCredentials(true)

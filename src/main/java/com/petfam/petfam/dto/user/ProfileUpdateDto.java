@@ -6,7 +6,7 @@ import lombok.Getter;
 public class ProfileUpdateDto {
   private String nickname;
   private String introduction;
-  private String image = "src/main/java/resources/static/images/m_20220509173224_d9N4ZGtBVR.jpeg";
+  private String image;
 
   public ProfileUpdateDto(String nickname, String introduction, String image) {
     this.nickname = nickname;

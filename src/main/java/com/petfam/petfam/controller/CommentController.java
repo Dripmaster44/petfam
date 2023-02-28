@@ -45,7 +45,7 @@ public class CommentController {
   }
 
   // 대댓글 생성
-  @PostMapping("{commentId}")
+  @PostMapping("{commentId}/recomments")
   public ResponseEntity<String> reComment(@PathVariable Long commentId,
       @RequestBody ReCommentRequestDto reCommentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
