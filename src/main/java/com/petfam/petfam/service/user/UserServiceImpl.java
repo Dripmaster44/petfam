@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
   // 관리자 로그인
   @Override
   @Transactional
-  public String AdminSignin(AdminSigninRequestDto adminSigninRequestDto,
+  public String adminSignin(AdminSigninRequestDto adminSigninRequestDto,
       HttpServletResponse response) {
     User admin = userRepository.findByUsername(adminSigninRequestDto.getUsername()).orElseThrow(
         () -> new IllegalArgumentException("아이디와 비밀번호를 확인해주세요")

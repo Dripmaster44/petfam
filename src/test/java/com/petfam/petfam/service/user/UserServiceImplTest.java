@@ -224,7 +224,7 @@ class UserServiceImplTest {
     when(jwtUtil.getRefreshTokenTime()).thenReturn(1000L);
 
     //when
-    String result = userService.AdminSignin(requestDto,response);
+    String result = userService.adminSignin(requestDto,response);
 
     //then
     assertEquals("success", result);
@@ -249,7 +249,7 @@ class UserServiceImplTest {
 
     // when & then
     assertThrows(IllegalArgumentException.class, () -> {
-      userService.AdminSignin(requestDto,response);
+      userService.adminSignin(requestDto,response);
     });
 
   }
@@ -266,7 +266,7 @@ class UserServiceImplTest {
 
     // when & then
     assertThrows(IllegalArgumentException.class, () -> {
-      userService.AdminSignin(requestDto,response);
+      userService.adminSignin(requestDto,response);
     });
   }
 

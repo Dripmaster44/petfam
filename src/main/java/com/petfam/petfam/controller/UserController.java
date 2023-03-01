@@ -11,7 +11,7 @@ import com.petfam.petfam.dto.user.UserSignupRequestDto;
 import com.petfam.petfam.dto.user.UserUsernameDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.user.KakaoService;
-import com.petfam.petfam.service.user.UserServiceImpl;
+import com.petfam.petfam.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,35 +32,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
-  private final UserServiceImpl userService;
+  private final UserService userService;
   private final KakaoService kakaoService;
 
 
   @PostMapping("/signup")
   public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
-    userService.userSignup(requestDto);
-    return ResponseEntity.status(HttpStatus.OK).body("success");
+    return ResponseEntity.status(HttpStatus.OK).body(userService.userSignup(requestDto));
   }
 
 
   @PostMapping("/admin/signup")
-  public String adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
-    userService.adminSignup(requestDto);
-    return "success";
+  public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.adminSignup(requestDto));
   }
 
   @PostMapping("/signin")
-  public String signin(@RequestBody SigninRequestDto signinRequestDto,
-      HttpServletResponse response) {
-     userService.signin(signinRequestDto, response);
-     return "success";
+  public ResponseEntity<String> signin(@RequestBody SigninRequestDto requestDto, HttpServletResponse response) {
+     return ResponseEntity.status(HttpStatus.OK).body(userService.signin(requestDto,response));
   }
 
   @PostMapping("/admin/signin")
-  public String adminSignin(@RequestBody AdminSigninRequestDto requestDto,
-      HttpServletResponse response) {
-      userService.AdminSignin(requestDto, response);
-      return "success";
+  public ResponseEntity<String> adminSignin(@RequestBody AdminSigninRequestDto requestDto, HttpServletResponse response) {
+      return ResponseEntity.status(HttpStatus.OK).body(userService.adminSignin(requestDto,response));
   }
 
 	@PostMapping("/signout")
