@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     userRepository.save(user);
 
-    return "회원가입완료";
+    return "success";
   }
 
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
       userRepository.save(admin);
 
-      return "관리자 회원가입완료";
+      return "success";
     } else {
       throw new IllegalArgumentException("관리자 암호가 일치하지 않습니다");
     }
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER,accessToken);
     response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
 
-    return "로그인완료";
+    return "success";
   }
 
   // 관리자 로그인
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
     response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
 
 
-    return "로그인완료";
+    return "success";
   }
 
   // 로그아웃
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public ProfileResponseDto getProfile(Long userId) {
     User user = _findUser(userId);
-    return new ProfileResponseDto(user);
+    return ProfileResponseDto.builder().nickname(user.getNickname()).id(user.getId()).image(user.getImage()).introduction(user.getIntroduction()).role(user.getUserRole().getAuthority()).build();
   }
 
   // 토큰 리프레쉬
@@ -189,14 +189,12 @@ public class UserServiceImpl implements UserService {
     }
   }
   public String ck_username(UserUsernameDto userUsernameDto) {
-    System.out.println(userUsernameDto.getUsername());
     if (userRepository.findByUsername(userUsernameDto.getUsername()).isEmpty()) {
       return "success";
     } else return "fail";
   }
 
   public String ck_nickname(UserNicknameDto userNicknameDto) {
-    System.out.println(userNicknameDto.getNickname());
     if (userRepository.findByNickname(userNicknameDto.getNickname()).isEmpty()) {
       return "success";
     } else return "fail";
