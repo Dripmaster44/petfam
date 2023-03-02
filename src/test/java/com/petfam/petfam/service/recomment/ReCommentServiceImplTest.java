@@ -8,11 +8,13 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.petfam.petfam.dto.recomment.ReCommentRequestDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.ReComment;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.ReCommentRepository;
 import com.petfam.petfam.repository.UserRepository;
@@ -115,6 +117,35 @@ class ReCommentServiceImplTest {
     }
 
     @Test
+    @DisplayName("관리자가 대댓글 수정")
+    void adminUpdateReComment() {
+      // Given
+      Comment comment = mock(Comment.class);
+      User user = mock(User.class);
+      User adminUser = new User("admin", "pass", "admin", "image", UserRoleEnum.ADMIN);
+      ReCommentRequestDto requestDto = ReCommentRequestDto.builder().content("content").build();
+      ReComment reComment = ReComment.builder().reCommentRequestDto(requestDto).build();
+      reCommentRepository.save(reComment);
+
+      ReCommentRequestDto updateReComment = ReCommentRequestDto.builder().content("updateContent")
+          .build();
+
+      when(reCommentRepository.findById(reComment.getId())).thenReturn(Optional.of(reComment));
+      when(userRepository.findByUsername(adminUser.getUsername())).thenReturn(
+          Optional.of(adminUser));
+
+      // When
+      String result = reCommentService.updateReComment(reComment.getId(), adminUser,
+          updateReComment);
+
+      // Then
+      assertThat(result).isEqualTo("댓글 수정이 완료되었습니다.");
+      assertThat(
+          reCommentRepository.findById(reComment.getId()).orElseThrow().getContent()).isEqualTo(
+          "updateContent");
+    }
+
+    @Test
     @DisplayName("존재하지 않는 대댓글의 수정을 시도")
     void updateReCommentThatIsNotExist() {
       // given
@@ -184,6 +215,28 @@ class ReCommentServiceImplTest {
       reCommentService.deleteReComment(reComment.getId(), user);
 
       // then
+      verify(reCommentRepository, times(1)).deleteById(reComment.getId());
+    }
+
+    @Test
+    @DisplayName("관리자가 댓글 삭제")
+    void adminDeleteComment() {
+      // Given
+      Comment comment = mock(Comment.class);
+      User user = mock(User.class);
+      User adminUser = new User("admin", "pass", "admin", "image", UserRoleEnum.ADMIN);
+      ReComment reComment = mock(ReComment.class);
+      reCommentRepository.save(reComment);
+
+      when(reCommentRepository.findById(reComment.getId())).thenReturn(Optional.of(reComment));
+      when(userRepository.findByUsername(adminUser.getUsername())).thenReturn(
+          Optional.of(adminUser));
+
+      // When
+      String result = reCommentService.deleteReComment(reComment.getId(), adminUser);
+
+      // Then
+      assertThat(result).isEqualTo("댓글 삭제가 완료되었습니다.");
       verify(reCommentRepository, times(1)).deleteById(reComment.getId());
     }
 

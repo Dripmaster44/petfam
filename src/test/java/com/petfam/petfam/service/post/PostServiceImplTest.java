@@ -24,6 +24,8 @@ import com.petfam.petfam.repository.PostRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,6 +35,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,22 +76,60 @@ class PostServiceImplTest {
     assertThat(savedPost).isEqualTo("게시글 작성이 완료되었습니다.");
   }
 
-  @Test
+  @Nested
   @DisplayName("전체 게시글 불러오기")
-  void getPosts() {
-    // given
-    Pageable pageable = mock(Pageable.class);
+  class getPosts {
 
-    when(postRepository.findByCategoryOrderByCreatedAtDesc(CategoryEnum.PET, pageable)).thenReturn(
-        Page.empty());
+    @Test
+    @DisplayName("전체 게시글 조회")
+    void getAllPosts() {
+      // given
+      CategoryEnum category = CategoryEnum.PET;
+      Pageable pageable = PageRequest.of(0, 9);
+      Post post1 = mock(Post.class);
+      Post post2 = mock(Post.class);
+      Post post3 = mock(Post.class);
+      User user = mock(User.class);
 
-    // when
-    Page<AllPostResponseDto> responseDtoPage = postService.getPostsByCategory(CategoryEnum.PET,
-        pageable);
+      List<Post> postList = new ArrayList<>();
+      postList.add(post1);
+      postList.add(post2);
+      postList.add(post3);
+      Page<Post> postPage = new PageImpl<>(postList);
 
-    //then
-    assertThat(responseDtoPage).isNotNull();
+      when(post1.getUser()).thenReturn(user);
+      when(post2.getUser()).thenReturn(user);
+      when(post3.getUser()).thenReturn(user);
+      when(user.getNickname()).thenReturn("user");
+
+      // when
+      when(postRepository.findByCategoryOrderByCreatedAtDesc(category, pageable)).thenReturn(
+          postPage);
+      Page<AllPostResponseDto> result = postService.getPostsByCategory(category, pageable);
+
+      // then
+      verify(postRepository, times(1)).findByCategoryOrderByCreatedAtDesc(category, pageable);
+      assertEquals(3, result.getTotalElements());
+      assertEquals(3, result.getContent().size());
+    }
+
+    @Test
+    @DisplayName("게시글이 존재하지 않을 때")
+    void noExistPosts() {
+      // given
+      CategoryEnum category = CategoryEnum.PET;
+      Pageable pageable = PageRequest.of(0, 9);
+
+      // when
+      when(postRepository.findByCategoryOrderByCreatedAtDesc(category, pageable)).thenReturn(
+          Page.empty());
+
+      // then
+      assertThrows(IllegalArgumentException.class,
+          () -> postService.getPostsByCategory(category, pageable));
+    }
   }
+
 
   @Nested
   @DisplayName("게시글 개별 조회")
