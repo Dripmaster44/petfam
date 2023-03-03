@@ -8,11 +8,13 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.petfam.petfam.dto.comment.CommentRequestDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.repository.CommentRepository;
 import com.petfam.petfam.repository.PostRepository;
 import com.petfam.petfam.repository.UserRepository;
@@ -111,7 +113,34 @@ class CommentServiceImplTest {
       // then
       assertThat(updateRequestDto.getContent()).isEqualTo(comment.getContent());
     }
-    
+
+    @Test
+    @DisplayName("관리자가 댓글 수정")
+    void adminUpdateComment() {
+      // Given
+      Post post = mock(Post.class);
+      User user = mock(User.class);
+      User adminUser = new User("admin", "pass", "admin", "image", UserRoleEnum.ADMIN);
+      CommentRequestDto commentRequestDto = CommentRequestDto.builder().content("content").build();
+      Comment comment = new Comment(post, user, commentRequestDto);
+      commentRepository.save(comment);
+
+      CommentRequestDto updateComment = CommentRequestDto.builder().content("updateContent")
+          .build();
+
+      when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
+      when(userRepository.findByUsername(adminUser.getUsername())).thenReturn(
+          Optional.of(adminUser));
+
+      // When
+      String result = commentService.updateComment(comment.getId(), adminUser, updateComment);
+
+      // Then
+      assertThat(result).isEqualTo("댓글 수정이 완료되었습니다.");
+      assertThat(commentRepository.findById(comment.getId()).orElseThrow().getContent()).isEqualTo(
+          "updateContent");
+    }
+
     @Test
     @DisplayName("존재하지 않는 댓글의 수정을 시도")
     void updateCommentThatIsNotExist() {
@@ -177,6 +206,28 @@ class CommentServiceImplTest {
       commentService.deleteComment(comment.getId(), user);
 
       // then
+      verify(commentRepository, times(1)).deleteById(comment.getId());
+    }
+
+    @Test
+    @DisplayName("관리자가 댓글 삭제")
+    void adminDeleteComment() {
+      // Given
+      Post post = mock(Post.class);
+      User user = mock(User.class);
+      User adminUser = new User("admin", "pass", "admin", "image", UserRoleEnum.ADMIN);
+      Comment comment = mock(Comment.class);
+      commentRepository.save(comment);
+
+      when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
+      when(userRepository.findByUsername(adminUser.getUsername())).thenReturn(
+          Optional.of(adminUser));
+
+      // When
+      String result = commentService.deleteComment(comment.getId(), adminUser);
+
+      // Then
+      assertThat(result).isEqualTo("댓글 삭제가 완료되었습니다.");
       verify(commentRepository, times(1)).deleteById(comment.getId());
     }
 

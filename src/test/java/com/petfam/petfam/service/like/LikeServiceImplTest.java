@@ -66,6 +66,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 누르셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test
@@ -85,6 +86,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 취소하셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test
@@ -126,6 +128,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 누르셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test
@@ -146,6 +149,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 취소하셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test
@@ -187,6 +191,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 누르셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test
@@ -208,6 +213,7 @@ class LikeServiceImplTest {
 
       // then
       assertThat(responseDto.getMsg()).isEqualTo("좋아요를 취소하셨습니다.");
+      assertThat(responseDto.getStatuscode()).isEqualTo(200);
     }
 
     @Test

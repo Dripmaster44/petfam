@@ -47,9 +47,13 @@ public class PostServiceImpl implements PostService {
 
     List<AllPostResponseDto> allPostResponseDtoList = new ArrayList<>();
 
-    for (Post post : posts) {
-      AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
-      allPostResponseDtoList.add(allPostResponseDto);
+    if (posts.isEmpty()) {
+      throw new IllegalArgumentException("게시글이 존재하지 않습니다.");
+    } else {
+      for (Post post : posts) {
+        AllPostResponseDto allPostResponseDto = new AllPostResponseDto(post);
+        allPostResponseDtoList.add(allPostResponseDto);
+      }
     }
     return new PageImpl<>(allPostResponseDtoList, pageable, posts.getTotalElements());
   }
