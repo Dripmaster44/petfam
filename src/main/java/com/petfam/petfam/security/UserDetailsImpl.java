@@ -1,11 +1,11 @@
 package com.petfam.petfam.security;
 
+import com.petfam.petfam.entity.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.petfam.petfam.entity.User;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -18,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
   }
 
   public User getUser() {
-    return this.user;
+      return this.user;
   }
 
   @Override

@@ -56,18 +56,22 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     http.cors().and().csrf().disable();
 
     http.authorizeHttpRequests().requestMatchers("/users/signup").permitAll()
-        .requestMatchers("/users/signin").permitAll()
-        .requestMatchers("/users/admin/signup").permitAll()
-        .requestMatchers("/users/admin/signin").permitAll()
-        .requestMatchers("/users/refresh").permitAll()
-        .requestMatchers("/users/login-page").permitAll()
-        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
-        .requestMatchers(HttpMethod.GET, "/posts").permitAll()
-        .requestMatchers(HttpMethod.POST, "/posts/views/**").permitAll()  // 조회수용 쿠키 생성을 위한 허용
-        .anyRequest().authenticated()
-        .and()
-        .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository,
-            refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+
+            .requestMatchers("/users/signin").permitAll()
+            .requestMatchers("/users/admin/signup").permitAll()
+            .requestMatchers("/users/admin/signin").permitAll()
+            .requestMatchers("/users/refresh").permitAll()
+            .requestMatchers("/users/login-page").permitAll()
+            .requestMatchers("/users/id").permitAll()
+            .requestMatchers("/users/nickname").permitAll()
+            .requestMatchers("/users/kakao/callback").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+            .requestMatchers(HttpMethod.GET,"/posts").permitAll()
+            .requestMatchers(HttpMethod.POST, "/posts/views/**").permitAll()  // 조회수용 쿠키 생성을 위한 허용
+            .anyRequest().authenticated()
+            .and()
+            .addFilterBefore(new JwtAuthFilter(jwtUtil, signoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+                
 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

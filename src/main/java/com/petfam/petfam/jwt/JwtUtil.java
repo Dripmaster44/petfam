@@ -131,30 +131,6 @@ public class JwtUtil {
     return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
   }
 
-//  //리프레시토큰으로 재발급시 사용
-//  public Authentication getAuthentication(String token) {
-//    // Jwt 에서 claims 추출
-//    Claims claims = getUserInfoFromToken(token);
-//
-//    //토큰이 권한을 들고있지않다면
-//    if (claims.get(AUTHORIZATION_KEY) == null) {
-//      throw new IllegalStateException("잘못된 권한정보입니다");
-//    }
-//    //토큰이 들고있는 권한이 어드민이라면
-//    if(claims.get(AUTHORIZATION_KEY).equals("ADMIN")){
-//      UserDetails adminDetails = adminDetailsService.loadUserByUsername(claims.getSubject());
-//      //유저정보 + 크리티컬한정보 저장 + 유저의권한
-//      return new UsernamePasswordAuthenticationToken(adminDetails, null, adminDetails.getAuthorities());
-//    }
-//    //토큰이 들고있는 권한이 유저라면
-//    else{ //claims.get(AUTHORIZATION_KEY)== user)
-//      UserDetails clientDetails = clientDetailsService.loadUserByUsername(claims.getSubject());
-//      //유저정보 + 크리티컬한정보 저장 + 유저의권한
-//      return new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
-//    }
-//
-//
-//  }
   //남은 시간 계산
   public long getRemainMilliSeconds(String token) {
     Claims info = getUserInfoFromToken(token);

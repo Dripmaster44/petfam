@@ -1,9 +1,13 @@
 package com.petfam.petfam.dto.user;
 
-import com.petfam.petfam.entity.User;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@JsonDeserialize(builder = UserResponseDto.UserResponseDtoBuilder.class)
 public class UserResponseDto {
 
   private Long id;
@@ -11,10 +15,19 @@ public class UserResponseDto {
   private String nickname;
   private String role;
 
-  public UserResponseDto(User user) {
-    this.id = user.getId();
-    this.username = user.getUsername();
-    this.nickname = user.getNickname();
-    this.role = user.getUserRole().getAuthority();
+  public static class UserResponseDtoBuilder {
+    @JsonSetter("id")
+    private Long id;
+    @JsonSetter("username")
+    private String username;
+    @JsonSetter("nickname")
+    private String nickname;
+    @JsonSetter("role")
+    private String role;
+    public UserResponseDto build(){
+      return new UserResponseDto(id,username,nickname,role);
+    }
   }
+
+
 }

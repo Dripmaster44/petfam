@@ -6,7 +6,9 @@ import com.petfam.petfam.dto.user.AdminSignupRequestDto;
 import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
+import com.petfam.petfam.dto.user.UserNicknameDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
+import com.petfam.petfam.dto.user.UserUsernameDto;
 import com.petfam.petfam.entity.RefreshToken;
 import com.petfam.petfam.entity.SignoutAccessToken;
 import com.petfam.petfam.entity.User;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     userRepository.save(user);
 
-    return "회원가입완료";
+    return "success";
   }
 
 
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
       userRepository.save(admin);
 
-      return "관리자 회원가입완료";
+      return "success";
     } else {
       throw new IllegalArgumentException("관리자 암호가 일치하지 않습니다");
     }
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
     if (!passwordEncoder.matches(signinRequestDto.getPassword(), user.getPassword())) {
       throw new IllegalArgumentException("아이디와 비밀번호를 확인해주세요");
     }
-    
+
     String accessToken = jwtUtil.createToken(user.getUsername(),user.getUserRole());
     String refreshToken = jwtUtil.refreshToken(user.getUsername(),user.getUserRole());
 
@@ -100,13 +102,13 @@ public class UserServiceImpl implements UserService {
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER,accessToken);
     response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
 
-    return "로그인완료";
+    return "success";
   }
 
   // 관리자 로그인
   @Override
   @Transactional
-  public String AdminSignin(AdminSigninRequestDto adminSigninRequestDto,
+  public String adminSignin(AdminSigninRequestDto adminSigninRequestDto,
       HttpServletResponse response) {
     User admin = userRepository.findByUsername(adminSigninRequestDto.getUsername()).orElseThrow(
         () -> new IllegalArgumentException("아이디와 비밀번호를 확인해주세요")
@@ -135,7 +137,7 @@ public class UserServiceImpl implements UserService {
     response.addHeader(JwtUtil.REFRESH_AUTHORIZATION_HEADER,refreshToken);
 
 
-    return "로그인완료";
+    return "success";
   }
 
   // 로그아웃
@@ -166,7 +168,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public ProfileResponseDto getProfile(Long userId) {
     User user = _findUser(userId);
-    return new ProfileResponseDto(user);
+    return ProfileResponseDto.builder().nickname(user.getNickname()).id(user.getId()).image(user.getImage()).introduction(user.getIntroduction()).role(user.getUserRole().getAuthority()).build();
   }
 
   // 토큰 리프레쉬
@@ -186,7 +188,17 @@ public class UserServiceImpl implements UserService {
       throw new IllegalArgumentException("다시 로그인 해주세요");
     }
   }
+  public String ck_username(UserUsernameDto userUsernameDto) {
+    if (userRepository.findByUsername(userUsernameDto.getUsername()).isEmpty()) {
+      return "success";
+    } else return "fail";
+  }
 
+  public String ck_nickname(UserNicknameDto userNicknameDto) {
+    if (userRepository.findByNickname(userNicknameDto.getNickname()).isEmpty()) {
+      return "success";
+    } else return "fail";
+  }
   private void _ck_username(String username) {
     if (userRepository.findByUsername(username).isPresent()) {
       throw new IllegalArgumentException("이미 존재하는 유저입니다.");

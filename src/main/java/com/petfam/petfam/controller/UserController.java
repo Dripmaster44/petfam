@@ -1,14 +1,17 @@
 package com.petfam.petfam.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.petfam.petfam.dto.user.AdminSigninRequestDto;
 import com.petfam.petfam.dto.user.AdminSignupRequestDto;
 import com.petfam.petfam.dto.user.ProfileResponseDto;
 import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
+import com.petfam.petfam.dto.user.UserNicknameDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
+import com.petfam.petfam.dto.user.UserUsernameDto;
 import com.petfam.petfam.security.UserDetailsImpl;
+import com.petfam.petfam.service.user.KakaoService;
 import com.petfam.petfam.service.user.UserService;
-import com.petfam.petfam.service.user.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,32 +34,28 @@ public class UserController {
 
   private final UserService userService;
 
+  private final KakaoService kakaoService;
+
 
   @PostMapping("/signup")
-  public String userSignup(@RequestBody UserSignupRequestDto requestDto) {
-    userService.userSignup(requestDto);
-    return "success";
+  public ResponseEntity<String> userSignup(@RequestBody UserSignupRequestDto requestDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.userSignup(requestDto));
   }
 
 
   @PostMapping("/admin/signup")
-  public String adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
-    userService.adminSignup(requestDto);
-    return "success";
+  public ResponseEntity<String> adminSignup(@RequestBody AdminSignupRequestDto requestDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.adminSignup(requestDto));
   }
 
   @PostMapping("/signin")
-  public String signin(@RequestBody SigninRequestDto signinRequestDto,
-      HttpServletResponse response) {
-     userService.signin(signinRequestDto, response);
-     return "success";
+  public ResponseEntity<String> signin(@RequestBody SigninRequestDto requestDto, HttpServletResponse response) {
+     return ResponseEntity.status(HttpStatus.OK).body(userService.signin(requestDto,response));
   }
 
   @PostMapping("/admin/signin")
-  public String adminSignin(@RequestBody AdminSigninRequestDto requestDto,
-      HttpServletResponse response) {
-      userService.AdminSignin(requestDto, response);
-      return "success";
+  public ResponseEntity<String> adminSignin(@RequestBody AdminSigninRequestDto requestDto, HttpServletResponse response) {
+      return ResponseEntity.status(HttpStatus.OK).body(userService.adminSignin(requestDto,response));
   }
 
 	@PostMapping("/signout")
@@ -91,4 +90,22 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(userService.refresh(request, response));
   }
 
+  @PostMapping("/id")
+  public ResponseEntity<String> ck_id(@RequestBody UserUsernameDto userUsernameDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ck_username(userUsernameDto));
+  }
+
+  @PostMapping("/nickname")
+  public ResponseEntity<String> ck_nickname(@RequestBody UserNicknameDto userNicknameDto) {
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ck_nickname(userNicknameDto));
+  }
+
+  @GetMapping("/kakao/callback")
+  public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    // code: 카카오 서버로부터 받은 인가 코드
+    kakaoService.kakaoLogin(code, response);
+
+    return "redirect:/index.html";
+
+  }
 }
