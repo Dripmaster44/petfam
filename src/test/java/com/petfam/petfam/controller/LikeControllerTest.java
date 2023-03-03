@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
 class LikeControllerTest {
@@ -42,14 +44,15 @@ class LikeControllerTest {
         .thenReturn(mockResponse);
 
     // when
-    PostLikeResponseDto response = likeController.likePost(postId, userDetails);
+    ResponseEntity<PostLikeResponseDto> responseEntity = likeController.likePost(postId,
+        userDetails);
 
     // then
     verify(likeService).likePost(eq(postId), eq(mockUser));
-    assertEquals(mockResponse, response);
-    assertEquals(1, response.getStatuscode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(mockResponse, responseEntity.getBody());
+    assertEquals(1, responseEntity.getBody().getStatuscode());
   }
-
 
   @Test
   @DisplayName("댓글 좋아요")
@@ -68,16 +71,17 @@ class LikeControllerTest {
         .thenReturn(mockResponse);
 
     LikeController likeController = new LikeController(likeService);
-    CommentLikeResponseDto response = likeController.likeComment(commentId, userDetails);
+    ResponseEntity<CommentLikeResponseDto> response = likeController.likeComment(commentId,
+        userDetails);
 
     // then
     assertAll(
         () -> verify(likeService, times(1)).likeComment(eq(commentId), eq(mockUser)),
-        () -> assertEquals(mockResponse, response),
-        () -> assertEquals(1, response.getStatuscode())
+        () -> assertEquals(mockResponse, response.getBody()),
+        () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
+        () -> assertEquals(1, response.getBody().getStatuscode())
     );
   }
-
   @Test
   @DisplayName("대댓글 좋아요")
   void likeReComment() {
@@ -93,11 +97,13 @@ class LikeControllerTest {
     LikeController likeController = new LikeController(likeService);
 
     // when
-    ReCommentLikeResponseDto response = likeController.likeReComment(recommentId, userDetails);
+    ResponseEntity<ReCommentLikeResponseDto> responseEntity = likeController.likeReComment(recommentId, userDetails);
+    ReCommentLikeResponseDto response = responseEntity.getBody();
 
     // then
     verify(likeService).likeReComment(eq(recommentId), eq(mockUser));
     assertEquals(mockResponse, response);
     assertEquals(1, response.getStatuscode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 }

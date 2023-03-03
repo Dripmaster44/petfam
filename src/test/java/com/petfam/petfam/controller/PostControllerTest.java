@@ -128,12 +128,14 @@ public class PostControllerTest {
     when(postService.getSelectPost(id)).thenReturn(postResponseDto);
 
     // when
-    PostResponseDto result = postController.getSelectPost(id);
+    ResponseEntity<PostResponseDto> result = postController.getSelectPost(id);
 
     // then
-    assertEquals(id, result.getId());
-    assertEquals("title", result.getTitle());
-    assertEquals("content", result.getContent());
+    assertNotNull(result);
+    assertEquals(HttpStatus.OK, result.getStatusCode());
+    assertEquals(id, result.getBody().getId());
+    assertEquals("title", result.getBody().getTitle());
+    assertEquals("content", result.getBody().getContent());
   }
 
   // 예외
@@ -149,9 +151,9 @@ public class PostControllerTest {
 
   @DisplayName("게시물 수정")
   @Test
-  void updatePostTest() {
+  void updatePost() {
     // given
-    Long postId = 1L;
+    Long id = 1L;
     PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
         .title("title")
         .content("content")
@@ -162,11 +164,12 @@ public class PostControllerTest {
     when(userDetails.getUser()).thenReturn(user);
 
     // when
-    String result = postController.updatePost(postId, postUpdateRequestDto, userDetails);
+    ResponseEntity<String> response = postController.updatePost(id, postUpdateRequestDto, userDetails);
 
     // then
-    assertEquals("게시글 수정이 완료되었습니다.", result);
-    verify(postService, times(1)).updatePost(eq(postId), eq(postUpdateRequestDto), eq(user));
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("게시글 수정이 완료되었습니다.", response.getBody());
+    verify(postService, times(1)).updatePost(eq(id), eq(postUpdateRequestDto), eq(user));
     verify(userDetails, times(1)).getUser();
   }
 
@@ -180,15 +183,16 @@ public class PostControllerTest {
     user.setUsername("user1");
 
     when(userDetails.getUser()).thenReturn(user);
-    when(postService.deletePost(postId, user)).thenReturn("success");
+    when(postService.deletePost(postId, user)).thenReturn("게시글 삭제가 완료되었습니다.");
 
     // when
-    String result = postController.deletePost(postId, userDetails);
+    ResponseEntity<String> response = postController.deletePost(postId, userDetails);
 
     // then
     verify(userDetails, times(1)).getUser();
     verify(postService, times(1)).deletePost(postId, user);
-    assertEquals("success", result);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals("게시글 삭제가 완료되었습니다.", response.getBody());
   }
 
   @Test

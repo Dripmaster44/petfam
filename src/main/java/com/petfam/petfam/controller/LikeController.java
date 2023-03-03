@@ -7,6 +7,7 @@ import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.like.LikeService;
 import com.petfam.petfam.service.like.LikeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,23 +22,26 @@ public class LikeController {
 
   // 게시글 좋아요
   @PostMapping("/posts/{postId}/like")
-  public PostLikeResponseDto likePost(@PathVariable Long postId,
+  public ResponseEntity<PostLikeResponseDto> likePost(@PathVariable Long postId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return likeService.likePost(postId, userDetails.getUser());
+    PostLikeResponseDto response = likeService.likePost(postId, userDetails.getUser());
+    return ResponseEntity.ok(response);
   }
 
   // 댓글 좋아요
   @PostMapping("/comments/{commentId}/like")
-  public CommentLikeResponseDto likeComment(@PathVariable Long commentId,
+  public ResponseEntity<CommentLikeResponseDto> likeComment(@PathVariable Long commentId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return likeService.likeComment(commentId, userDetails.getUser());
+    CommentLikeResponseDto response = likeService.likeComment(commentId, userDetails.getUser());
+    return ResponseEntity.ok(response);
   }
 
 
   // 대댓글 좋아요
   @PostMapping("/recomments/{recommentId}/like")
-  public ReCommentLikeResponseDto likeReComment(@PathVariable Long recommentId,
+  public ResponseEntity<ReCommentLikeResponseDto> likeReComment(@PathVariable Long recommentId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return likeService.likeReComment(recommentId, userDetails.getUser());
+    ReCommentLikeResponseDto response = likeService.likeReComment(recommentId, userDetails.getUser());
+    return ResponseEntity.ok(response);
   }
 }

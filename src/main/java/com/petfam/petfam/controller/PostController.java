@@ -73,22 +73,24 @@ import org.springframework.web.bind.annotation.RestController;
 
   // 선택 게시글 조회
   @GetMapping("/{id}")
-  public PostResponseDto getSelectPost(@PathVariable Long id) {
-    return postService.getSelectPost(id);
+  public ResponseEntity<PostResponseDto> getSelectPost(@PathVariable Long id) {
+    PostResponseDto post = postService.getSelectPost(id);
+    return ResponseEntity.ok(post);
   }
 
-  @PatchMapping("/{id}")
-  public String updatePost(@PathVariable Long id,
+  @PostMapping("/{id}")
+  public ResponseEntity<String> updatePost(@PathVariable Long id,
       @RequestBody PostUpdateRequestDto postUpdateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     postService.updatePost(id, postUpdateRequestDto, userDetails.getUser());
-    return "게시글 수정이 완료되었습니다.";
+    return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
   }
 
   @DeleteMapping("/{id}")
-  public String deletePost(@PathVariable Long id,
+  public ResponseEntity<String> deletePost(@PathVariable Long id,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.deletePost(id, userDetails.getUser());
+    postService.deletePost(id, userDetails.getUser());
+    return ResponseEntity.ok("게시글 삭제가 완료되었습니다.");
   }
 
   // 댓글 생성
