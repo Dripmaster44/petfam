@@ -7,6 +7,7 @@ import com.petfam.petfam.dto.user.ProfileUpdateDto;
 import com.petfam.petfam.dto.user.SigninRequestDto;
 import com.petfam.petfam.dto.user.UserSignupRequestDto;
 import com.petfam.petfam.security.UserDetailsImpl;
+import com.petfam.petfam.service.user.UserService;
 import com.petfam.petfam.service.user.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/users")
 public class UserController {
 
-  private final UserServiceImpl userService;
+  private final UserService userService;
 
 
   @PostMapping("/signup")

@@ -1,7 +1,9 @@
 package com.petfam.petfam.dto.like;
 
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class ReCommentLikeResponseDto {
 

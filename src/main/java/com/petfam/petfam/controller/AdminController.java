@@ -1,5 +1,6 @@
 package com.petfam.petfam.controller;
 
+import com.petfam.petfam.service.user.AdminService;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Secured("ROLE_ADMIN")
 public class AdminController {
 
-	private final AdminServiceImpl adminService;
+	private final AdminService adminService;
 
 	//페이징처리
 	@GetMapping("/users")

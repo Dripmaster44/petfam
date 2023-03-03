@@ -17,13 +17,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // lombok
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED) 테코 작업
+@NoArgsConstructor
 
 //jpa
 @Entity(name = "users")
+@Setter
 public class User {
 
   /**
