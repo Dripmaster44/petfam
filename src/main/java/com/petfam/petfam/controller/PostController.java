@@ -11,6 +11,8 @@ import com.petfam.petfam.service.comment.CommentService;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostService;
 import com.petfam.petfam.service.post.PostServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,7 +66,8 @@ import org.springframework.web.bind.annotation.RestController;
   // 게시글 전체 목록 조회
   @GetMapping("")
   public ResponseEntity<Page<AllPostResponseDto>> getPosts(@RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "9") int size,
+
       @RequestParam(required = false) CategoryEnum category) {
     Pageable pageable = PageRequest.of(page, size);
     Page<AllPostResponseDto> posts = postService.getPostsByCategory(category, pageable);
@@ -98,5 +101,13 @@ import org.springframework.web.bind.annotation.RestController;
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(commentService.comment(postId, userDetails.getUser(), commentRequestDto));
+  }
+
+  // 조회수 중복 방지용 쿠키 발행
+  @PostMapping("/views/{id}")
+  public void updateView(@PathVariable long id,
+      HttpServletRequest request,
+      HttpServletResponse response) {
+    postService.updateView(id, request, response);
   }
 }

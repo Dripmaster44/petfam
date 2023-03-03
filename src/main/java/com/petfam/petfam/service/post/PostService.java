@@ -7,7 +7,8 @@ import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.dto.post.PostUpdateResponseDto;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.CategoryEnum;
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,6 @@ public interface PostService {
   // deletePost
   String deletePost(Long postId, User user);
 
+  // 조회수 증가
+  int updateView(Long id, HttpServletRequest request, HttpServletResponse response);
 }
-

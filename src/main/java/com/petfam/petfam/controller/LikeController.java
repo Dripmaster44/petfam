@@ -33,7 +33,6 @@ public class LikeController {
     return likeService.likeComment(commentId, userDetails.getUser());
   }
 
-
   // 대댓글 좋아요
   @PostMapping("/recomments/{recommentId}/like")
   public ReCommentLikeResponseDto likeReComment(@PathVariable Long recommentId,

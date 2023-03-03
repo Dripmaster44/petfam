@@ -31,5 +31,6 @@ public class PostUpdateRequestDto {
       return new PostUpdateRequestDto(title, content, image, category);
     }
   }
-
 }
+
+
