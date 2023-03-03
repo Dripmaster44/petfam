@@ -8,6 +8,7 @@ import com.petfam.petfam.dto.comment.CommentRequestDto;
 import com.petfam.petfam.dto.recomment.ReCommentRequestDto;
 import com.petfam.petfam.entity.Comment;
 import com.petfam.petfam.entity.User;
+import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.recomment.ReCommentServiceImpl;
@@ -41,15 +42,20 @@ class CommentControllerTest {
   void updateComment() {
     // given
     Long commentId = 1L;
-    User user = new User();
-    user.setId(2L);
-    user.setUsername("user");
-    Comment comment = new Comment();
-    comment.setId(commentId);
-    comment.setUser(user);
-
+    User user = User.builder()
+        .id(2L)
+        .username("user")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
+    Comment comment = Comment.builder()
+        .id(commentId)
+        .user(user)
+        .content("old content")
+        .build();
     CommentRequestDto commentRequestDto = CommentRequestDto.builder()
-        .content("content")
+        .content("댓글 수정")
         .build();
 
     when(commentService.updateComment(commentId, user, commentRequestDto)).thenReturn("댓글 수정");
@@ -63,6 +69,7 @@ class CommentControllerTest {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("댓글 수정", response.getBody());
     verify(userDetails, times(1)).getUser();
+    assertEquals(commentRequestDto.getContent(), response.getBody());
   }
 
 
@@ -71,12 +78,18 @@ class CommentControllerTest {
   void deleteComment() {
     // given
     Long commentId = 1L;
-    User user = new User();
-    user.setId(4L);
-    user.setUsername("user");
-    Comment comment = new Comment();
-    comment.setId(commentId);
-    comment.setUser(user);
+    User user = User.builder()
+        .id(4L)
+        .username("user")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
+    Comment comment = Comment.builder()
+        .id(commentId)
+        .user(user)
+        .content("comment content")
+        .build();
 
     when(commentService.deleteComment(commentId, user)).thenReturn("댓글 삭제");
     when(userDetails.getUser()).thenReturn(user);
@@ -95,14 +108,18 @@ class CommentControllerTest {
   @Test
   @DisplayName("대댓글 작성")
   void reComment() {
-      // given
-      Long commentId = 1L;
-      ReCommentRequestDto reCommentRequestDto = ReCommentRequestDto.builder().content("recomment").build();
-      User user = new User();
-      user.setId(1L);
-      user.setUsername("user");
+     // given
+    Long commentId = 1L;
+    ReCommentRequestDto reCommentRequestDto = ReCommentRequestDto.builder().content("recomment").build();
+    User user = User.builder()
+        .id(4L)
+        .username("user")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
 
-      when(userDetails.getUser()).thenReturn(user);
+    when(userDetails.getUser()).thenReturn(user);
       when(reCommentService.reComment(commentId, user, reCommentRequestDto)).thenReturn("success");
 
       // when

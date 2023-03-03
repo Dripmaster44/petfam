@@ -13,13 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Comment extends TimeStamped {
 
@@ -44,6 +44,15 @@ public class Comment extends TimeStamped {
   @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ReComment> reComment = new ArrayList<>();
 
+  //테스트 코드
+  @Builder
+  public Comment(Long id, String content, User user, Post post, Integer likes) {
+    this.id = id;
+    this.content = content;
+    this.user = user;
+    this.post = post;
+    this.likes = likes;
+  }
 
   public void updateLike(boolean islike) {
     likes += islike ? 1 : -1;

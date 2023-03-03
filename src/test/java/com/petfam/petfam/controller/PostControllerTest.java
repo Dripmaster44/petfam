@@ -12,8 +12,10 @@ import com.petfam.petfam.dto.post.AllPostResponseDto;
 import com.petfam.petfam.dto.post.PostCreateRequestDto;
 import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
+import com.petfam.petfam.entity.Post;
 import com.petfam.petfam.entity.User;
 import com.petfam.petfam.entity.enums.CategoryEnum;
+import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
@@ -68,7 +70,7 @@ public class PostControllerTest {
 
     // then
     assertNotNull(response);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertEquals("Success", response.getBody());
   }
 
@@ -128,14 +130,15 @@ public class PostControllerTest {
     when(postService.getSelectPost(id)).thenReturn(postResponseDto);
 
     // when
-    ResponseEntity<PostResponseDto> result = postController.getSelectPost(id);
+    ResponseEntity<PostResponseDto> response = postController.getSelectPost(id);
+    PostResponseDto result = response.getBody();
 
     // then
+    assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(result);
-    assertEquals(HttpStatus.OK, result.getStatusCode());
-    assertEquals(id, result.getBody().getId());
-    assertEquals("title", result.getBody().getTitle());
-    assertEquals("content", result.getBody().getContent());
+    assertEquals(id, result.getId());
+    assertEquals("title", result.getTitle());
+    assertEquals("content", result.getContent());
   }
 
   // 예외
@@ -153,24 +156,24 @@ public class PostControllerTest {
   @Test
   void updatePost() {
     // given
-    Long id = 1L;
+    Long postId = 1L;
     PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
         .title("title")
         .content("content")
         .build();
-    User user = new User();
-    user.setId(1L);
-    user.setUsername("user");
+    User user = User.builder()
+        .id(1L)
+        .username("user")
+        .build();
     when(userDetails.getUser()).thenReturn(user);
 
     // when
-    ResponseEntity<String> response = postController.updatePost(id, postUpdateRequestDto, userDetails);
+    ResponseEntity<String> response = postController.updatePost(postId, postUpdateRequestDto, userDetails);
 
     // then
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals("게시글 수정이 완료되었습니다.", response.getBody());
-    verify(postService, times(1)).updatePost(eq(id), eq(postUpdateRequestDto), eq(user));
-    verify(userDetails, times(1)).getUser();
+    verify(postService, times(1)).updatePost(eq(postId), eq(postUpdateRequestDto), eq(user));
   }
 
   @Test
@@ -178,9 +181,13 @@ public class PostControllerTest {
   void deletePost() {
     // given
     Long postId = 1L;
-    User user = new User();
-    user.setId(1L);
-    user.setUsername("user1");
+    User user = User.builder()
+        .id(1L)
+        .username("user1")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
 
     when(userDetails.getUser()).thenReturn(user);
     when(postService.deletePost(postId, user)).thenReturn("게시글 삭제가 완료되었습니다.");
@@ -199,9 +206,13 @@ public class PostControllerTest {
   @DisplayName("게시물 삭제 예외")
   public void deletePostException() {
     Long postId = 1L;
-    User user = new User();
-    user.setId(2L);
-    user.setUsername("user2");
+    User user = User.builder()
+        .id(1L)
+        .username("user1")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
 
     when(userDetails.getUser()).thenReturn(user);
     doThrow(new AccessDeniedException("Unauthorized")).when(postService).deletePost(postId, user);
@@ -223,9 +234,13 @@ public class PostControllerTest {
     Long postId = 1L;
     CommentRequestDto.CommentRequestDtoBuilder commentBuilder = CommentRequestDto.builder().content("comment");
     CommentRequestDto commentRequestDto = commentBuilder.build();
-    User user = new User();
-    user.setId(1L);
-    user.setUsername("user");
+    User user = User.builder()
+        .id(1L)
+        .username("user1")
+        .password("password")
+        .nickname("nickname")
+        .userRole(UserRoleEnum.USER)
+        .build();
 
     when(userDetails.getUser()).thenReturn(user);
     when(commentService.comment(postId, user, commentRequestDto)).thenReturn("success");

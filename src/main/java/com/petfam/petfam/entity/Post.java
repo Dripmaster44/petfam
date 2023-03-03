@@ -17,10 +17,8 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 public class Post extends TimeStamped {
@@ -53,7 +51,6 @@ public class Post extends TimeStamped {
   // 조회수
   @Column(columnDefinition = "integer default 0", nullable = false)
   private int view;
-
 
   @Builder
   public Post(PostCreateRequestDto requestDto, User user) {
