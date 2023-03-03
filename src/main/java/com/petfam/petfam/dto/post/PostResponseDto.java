@@ -1,5 +1,7 @@
 package com.petfam.petfam.dto.post;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.petfam.petfam.dto.CategoryDto;
 import com.petfam.petfam.dto.comment.CommentResponseDto;
 import com.petfam.petfam.entity.Post;
@@ -51,5 +53,5 @@ public class PostResponseDto {
     this.comments = post.getComments().stream().map(CommentResponseDto::new)
         .collect(Collectors.toList());
   }
-}
+  }
 

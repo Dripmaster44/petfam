@@ -36,7 +36,6 @@ public class LikeController {
     return ResponseEntity.ok(response);
   }
 
-
   // 대댓글 좋아요
   @PostMapping("/recomments/{recommentId}/like")
   public ResponseEntity<ReCommentLikeResponseDto> likeReComment(@PathVariable Long recommentId,
