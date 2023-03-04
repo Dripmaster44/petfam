@@ -2,6 +2,7 @@ package com.petfam.petfam.controller;
 
 import com.petfam.petfam.dto.recomment.ReCommentRequestDto;
 import com.petfam.petfam.security.UserDetailsImpl;
+import com.petfam.petfam.service.recomment.ReCommentService;
 import com.petfam.petfam.service.recomment.ReCommentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/recomments")
 public class ReCommentController {
 
-  private final ReCommentServiceImpl reCommentService;
+  private final ReCommentService reCommentService;
 
 
   // 대댓글 수정

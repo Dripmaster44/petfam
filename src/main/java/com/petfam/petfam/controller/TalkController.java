@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/talk")
 public class TalkController {
 
-  private final TalkServiceImpl talkService;
+  private final TalkService talkService;
 
   //메시지 전송
   @PostMapping("/{receiveId}")

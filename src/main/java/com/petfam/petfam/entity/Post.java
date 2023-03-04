@@ -52,7 +52,6 @@ public class Post extends TimeStamped {
   @Column(columnDefinition = "integer default 0", nullable = false)
   private int view;
 
-
   @Builder
   public Post(PostCreateRequestDto requestDto, User user) {
     this.title = requestDto.getTitle();
@@ -61,6 +60,16 @@ public class Post extends TimeStamped {
     this.user = user;
     this.likes = 0;
     this.category = requestDto.getCategory();
+  }
+
+  //테스트 코드용
+  public Post(String title, String content, String image, CategoryEnum category, User user) {
+    this.title = title;
+    this.content = content;
+    this.image = image;
+    this.category = category;
+    this.user = user;
+    this.likes = 0;
   }
 
   public void updatePost(PostUpdateRequestDto dto) {

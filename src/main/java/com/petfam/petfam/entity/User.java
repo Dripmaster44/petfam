@@ -17,10 +17,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // lombok
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED) 테코 작업
+@NoArgsConstructor
+
 //jpa
 @Entity(name = "users")
 public class User {
@@ -58,6 +61,19 @@ public class User {
   /**
    * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
    */
+
+  @Builder
+  public User(Long id, String username, String password, String nickname,
+      String image, UserRoleEnum userRole) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+    this.nickname = nickname;
+    this.image = "src/main/java/resources/static/images/m_20220509173224_d9N4ZGtBVR.jpeg";
+    this.introduction = "안녕하세요.";
+    this.point = 0;
+    this.userRole = userRole;
+  }
 
   // id 생성자에 추가 -> 테스트코드를 위해서,이후 삭제 예정
   @Builder

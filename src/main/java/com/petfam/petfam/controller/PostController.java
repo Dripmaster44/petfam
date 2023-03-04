@@ -7,7 +7,9 @@ import com.petfam.petfam.dto.post.PostResponseDto;
 import com.petfam.petfam.dto.post.PostUpdateRequestDto;
 import com.petfam.petfam.entity.enums.CategoryEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
+import com.petfam.petfam.service.comment.CommentService;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
+import com.petfam.petfam.service.post.PostService;
 import com.petfam.petfam.service.post.PostServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,61 +35,66 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
-public class PostController {
+  public class PostController {
 
-  private final PostServiceImpl postService;
-  private final CommentServiceImpl commentService;
+    private final PostService postService;
+    private final CommentService commentService;
 
-  // 게시글 작성
-  @PostMapping("")
-  public String createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.createPost(postCreateRequestDto, userDetails.getUser());
-  }
-
-  //카테고리 미적용
-  @GetMapping("/all")
-  public Page<AllPostResponseDto> getAllPosts(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(required = false) Integer size,
-      @RequestParam(required = false) CategoryEnum category) {
-    Pageable pageable;
-    if (size != null) {
-      pageable = PageRequest.of(page, size);
-    } else {
-      pageable = Pageable.unpaged();
+    // 게시글 작성
+    @PostMapping("")
+    public ResponseEntity<String> createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+      String post = postService.createPost(postCreateRequestDto, userDetails.getUser());
+      return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
-    return postService.getPostsByCategory(category, pageable);
-  }
+    //카테고리 미적용
+    @GetMapping("/all")
+    public ResponseEntity<Page<AllPostResponseDto>> getAllPosts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) Integer size,
+        @RequestParam(required = false) CategoryEnum category) {
+      Pageable pageable;
+      if (size != null) {
+        pageable = PageRequest.of(page, size);
+      } else {
+        pageable = Pageable.unpaged();
+      }
+      Page<AllPostResponseDto> allPosts = postService.getPostsByCategory(category, pageable);
+      return ResponseEntity.ok(allPosts);
+    }
 
 
   // 게시글 전체 목록 조회
   @GetMapping("")
-  public Page<AllPostResponseDto> getPosts(@RequestParam(defaultValue = "0") int page,
+  public ResponseEntity<Page<AllPostResponseDto>> getPosts(@RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "9") int size,
+
       @RequestParam(required = false) CategoryEnum category) {
     Pageable pageable = PageRequest.of(page, size);
-    return postService.getPostsByCategory(category, pageable);
+    Page<AllPostResponseDto> posts = postService.getPostsByCategory(category, pageable);
+    return ResponseEntity.ok(posts);
   }
 
   // 선택 게시글 조회
   @GetMapping("/{id}")
-  public PostResponseDto getSelectPost(@PathVariable Long id) {
-    return postService.getSelectPost(id);
+  public ResponseEntity<PostResponseDto> getSelectPost(@PathVariable Long id) {
+    PostResponseDto post = postService.getSelectPost(id);
+    return ResponseEntity.ok(post);
   }
 
   @PatchMapping("/{id}")
-  public String updatePost(@PathVariable Long id,
+  public ResponseEntity<String> updatePost(@PathVariable Long id,
       @RequestBody PostUpdateRequestDto postUpdateRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     postService.updatePost(id, postUpdateRequestDto, userDetails.getUser());
-    return "게시글 수정이 완료되었습니다.";
+    return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
   }
 
   @DeleteMapping("/{id}")
-  public String deletePost(@PathVariable Long id,
+  public ResponseEntity<String> deletePost(@PathVariable Long id,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.deletePost(id, userDetails.getUser());
+    postService.deletePost(id, userDetails.getUser());
+    return ResponseEntity.ok("게시글 삭제가 완료되었습니다.");
   }
 
   // 댓글 생성
