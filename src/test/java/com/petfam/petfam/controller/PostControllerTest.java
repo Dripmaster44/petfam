@@ -19,6 +19,8 @@ import com.petfam.petfam.entity.enums.UserRoleEnum;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.comment.CommentServiceImpl;
 import com.petfam.petfam.service.post.PostServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +54,11 @@ public class PostControllerTest {
   @Mock
   private CommentServiceImpl commentService;
 
+  @Mock
+  private HttpServletRequest httpServletRequest;
+
+  @Mock
+  private HttpServletResponse httpServletResponse;
 
   @Test
   @DisplayName("게시물생성")
@@ -253,5 +260,18 @@ public class PostControllerTest {
     assertEquals("success", responseEntity.getBody());
     verify(userDetails, times(1)).getUser();
     verify(commentService, times(1)).comment(postId, user, commentRequestDto);
+  }
+  @Test
+  @DisplayName("조회수 중복방지")
+  void updateView() {
+    // given
+    long id = 1L;
+
+    // when
+    PostController controller = new PostController(postService, commentService);
+    controller.updateView(id, httpServletRequest, httpServletResponse);
+
+    // then
+    verify(postService, times(1)).updateView(eq(id), eq(httpServletRequest), eq(httpServletResponse));
   }
 }

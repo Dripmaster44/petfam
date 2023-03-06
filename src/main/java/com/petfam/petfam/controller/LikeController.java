@@ -5,7 +5,6 @@ import com.petfam.petfam.dto.like.PostLikeResponseDto;
 import com.petfam.petfam.dto.like.ReCommentLikeResponseDto;
 import com.petfam.petfam.security.UserDetailsImpl;
 import com.petfam.petfam.service.like.LikeService;
-import com.petfam.petfam.service.like.LikeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
