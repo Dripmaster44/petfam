@@ -2,6 +2,8 @@
 
 ### [프론트 깃허브 주소](https://github.com/Dripmaster44/petfam_repo.git)
 
+### [팀 노션 페이지](https://tattered-lodge-0cb.notion.site/6-1a272ab710d04ac2a9ea204d17a64c52)
+
 ***
 
 ## 프로젝트 프리뷰
@@ -11,42 +13,52 @@
 <summary> 프로젝트 프리뷰 </summary>
 <figure>
   <img src="readme_asset/01.png" alt="메인" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">메인 페이지</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/02.png" alt="전체 게시글 리스트(카테고리별)" width="auto"/>
+  <div></div>
   <figcaption style="text-align:center">전체 게시글 리스트(카테고리별)</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/03.png" alt="상세 게시글(본문)" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">상세 게시글(본문)</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/04.png" alt="상세 게시글(댓글)" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">상세 게시글(댓글)</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/05.png" alt="글 작성 페이지" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">글 작성 페이지</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/06.png" alt="로그인" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">로그인</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/10.png" alt="회원가입" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">회원가입</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/07.png" alt="메인 헤더(관리자용)" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">메인 헤더(관리자용)</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/08.png" alt="전체유저 조회(관리자용)" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">전체유저 조회(관리자용)</figcaption>
 </figure>
 <figure>
   <img src="readme_asset/09.png" alt="유저 프로필 정보" width="auto"/>
+  <div></div>
   <figcaption style="text-align: center">유저 프로필 정보</figcaption>
 </figure>
 </details>
@@ -98,11 +110,11 @@
 
 ## 2. 프로젝트 ERD
 
-![Untitled (5)](https://user-images.githubusercontent.com/117059820/220878918-8df19b2d-c035-4c43-9c43-4e8672488a26.png)
+![스크린샷 2023-03-07 시간_ 12 24 07](https://user-images.githubusercontent.com/117059820/223364336-b09a516a-afb3-42d1-897d-38aa9edf1a8e.png)
 
 ## 3. 서비스 아키텍쳐
 
-![ServiceArchitecture](https://user-images.githubusercontent.com/117059820/220859677-82fdf10e-2856-4684-ad13-41277a3bd82f.png)
+![화면 캡처 2023-03-07 142907](https://user-images.githubusercontent.com/117059820/223364462-06c3509e-8fe5-42ae-a055-922717d1a859.png)
 
 ## 4. 시연 영상
 
@@ -120,22 +132,17 @@
 
 - [x] 최상단 이달/이주의 베스트 좋아요 반려동물 나오게하기
 - [x] 최신순/인기순으로 나오게 하기
-- [ ] 아래에 페이징된 반려동물 사진+이름+좋아요 갯수 나오게 하기 -> 클릭 시 상세 페이지로 이동
+- [x] 아래에 페이징된 반려동물 최신순으로 나오게 하기 -> 클릭 시 상세 페이지로 이동
 
 ### 보조 페이지
 
 - [x] 반려동물 관련 질문 페이지
 - [x] 잡담 페이지
-- [ ] 게시글의 조회수 불러오기(구현중)
+- [x] 게시글의 조회수 불러오기
 
 ### 1:1 채팅
 
 - [x] DB 활용해서 구현
-- [ ] 웹소켓 활용해서 구현
-
-### 게시글 검색
-
-- [ ] 해시태그기능(키워드) #냥스타그램🐱
 
 ![footer](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=18&height=250&section=footer&text=Thank%20You!)
 
