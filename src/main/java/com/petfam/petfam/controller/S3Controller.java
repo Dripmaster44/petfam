@@ -43,9 +43,9 @@ public class S3Controller {
   }
 
   @DeleteMapping("/delete/{fileName:.+}")
-  public String deleteFile(@PathVariable String fileName) {
+  public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
     amazonS3.deleteObject(bucketName, fileName);
-    return "File deleted successfully";
+    return ResponseEntity.ok("File deleted successfully");
   }
 
   @GetMapping("/image/{fileName:.+}")

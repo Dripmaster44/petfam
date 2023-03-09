@@ -35,8 +35,15 @@ public class PostServiceImpl implements PostService {
   @Override
   @Transactional
   public String createPost(PostCreateRequestDto requestDto, User user) {
+    if (requestDto.getCategory().equals(CategoryEnum.CHAT)){
+      Post post = new Post(requestDto,"https://petfam-image.s3.ap-northeast-2.amazonaws.com/talk_s.png",user);
+      postRepository.save(post);
+    } else if (requestDto.getCategory().equals(CategoryEnum.QNA)) {
+      Post post = new Post(requestDto,"https://petfam-image.s3.ap-northeast-2.amazonaws.com/qna.jpg",user);
+      postRepository.save(post);
+    } else {
     Post post = new Post(requestDto, user);
-    postRepository.save(post);
+    postRepository.save(post); }
     return "게시글 작성이 완료되었습니다.";
   }
 
