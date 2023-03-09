@@ -62,6 +62,16 @@ public class Post extends TimeStamped {
     this.category = requestDto.getCategory();
   }
 
+  @Builder
+  public Post(PostCreateRequestDto requestDto,String image,User user) {
+    this.title = requestDto.getTitle();
+    this.content = requestDto.getContent();
+    this.image = image;
+    this.user = user;
+    this.likes = 0;
+    this.category = requestDto.getCategory();
+  }
+
   //테스트 코드용
   public Post(String title, String content, String image, CategoryEnum category, User user) {
     this.title = title;

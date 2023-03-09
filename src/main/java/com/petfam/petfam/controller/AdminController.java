@@ -25,7 +25,7 @@ public class AdminController {
 	//페이징처리
 	@GetMapping("/users")
 	public ResponseEntity<Page<UserResponseDto>> getUsers(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size){
+			@RequestParam(defaultValue = "100") int size){
 		Pageable pageable = PageRequest.of(page, size);
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.getUsers(pageable));
 	}
