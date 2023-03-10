@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public String updateProfile(ProfileUpdateDto profileUpdateDto, User user) {
-    _ck_nickname(user.getNickname());
+    _ck_nickname(profileUpdateDto.getNickname());
     user.updateProfile(profileUpdateDto);
     userRepository.save(user);
     return "success";
